@@ -19,7 +19,7 @@ class Incidencia(models.Model):
         ('Sub', 'Subtarea'),
         ('Epi', 'Epic'),
     )
-    padre = models.ManyToManyField('Incidencia')
+    #padre = models.ManyToManyField('Incidencia')
     tipo = models.CharField(choices=TIPO_CHOICES, max_length=3, null=False)
     codigo = models.CharField(max_length=32, null=False, primary_key=True)
     cartel = models.ForeignKey('Cartel', on_delete=models.DO_NOTHING, null=False)
@@ -28,7 +28,7 @@ class Incidencia(models.Model):
     sprint_inicio = models.ForeignKey('Sprint', on_delete=models.DO_NOTHING, null=False, related_name="sprint_inicio")
     sprint_fin = models.ForeignKey('Sprint', on_delete=models.DO_NOTHING, null=True, related_name="sprint_fin")
     reasignada = models.BooleanField(null=False, default=False)
-    fecha_produccion = models.DateField(null=True)
+    fecha_produccion = models.DateField(null=True, blank=True)
 
     def __str__(self):
         return self.codigo
@@ -50,7 +50,7 @@ class Sprint(models.Model):
     proyecto = models.CharField(max_length=64, null=False)
 
     def __str__(self):
-        return "Sprint: " + self.numero
+        return "Sprint: " + self.numero.__str__()
 
 
 class Cartel(models.Model):
@@ -59,10 +59,10 @@ class Cartel(models.Model):
     descripcion = models.CharField(max_length=256, null=False)
     horas_asignadas = models.FloatField(null=False)
     horas_disponibles = models.FloatField(null=False)
-    padre = models.ManyToManyField('Cartel')
+    #padre = models.ForeignKey('Cartel', on_delete=models.DO_NOTHING, null=True)
 
     def __str__(self):
-        return "Cartel: " + self.numero
+        return "Cartel: " + self.numero.__str__()
 
 
 class Planificacion(models.Model):
