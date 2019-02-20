@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}Planificación {{ planificacion.codigo }}{% endblock %}
+{% block content %}
+    <a type="button" class="btn btn-primary" href="{% url 'planificacion-list' %}">Volver</a>
+    <hr>
+
+
+    <div class="card">
+
+        <div class="card-header">
+            <b>Planificación:</b> Sprint {{ planificacion.sprint.numero }} - {{ planificacion.fecha }}
+        </div>
+        <div class="card-body">
+
+            <table class="table table-bordered text-center">
+                <thead class="thead-dark">
+                <th>Incidencia</th>
+                <th>Estado inicio</th>
+                <th>Estado fin</th>
+                <th>Asignado</th>
+                <th>Horas asignadas</th>
+                <th></th>
+                <th>Observación</th>
+                </thead>
+                <tr>
+                    {% for plani in planificaciones %}
+
+                        <td>
+                            <a href="{% url 'incidencia-detail' pk=plani.incidencia.pk %}"> {{ plani.incidencia.codigo }}</a>
+                        </td>
+                        <td>{{ plani.get_estado_inicio_display }}</td>
+                        {% if plani.estado_fin is None %}
+                            <td>---</td>
+                        {% else %}
+                            <td>{{ plani.get_estado_fin_display }}</td>
+                        {% endif %}
+                        <td>{{ plani.asignado }}</td>
+                        <td>{{ plani.incidencia.horas_estimadas }}</td>
+                        <td><a href="#">Editar</a></td>
+                        <td><a href="#">Observación</a></td>
+
+                    {% endfor %}
+                </tr>
+            </table>
+
+
+        </div>
+
+
+    </div>
+
+    <hr>
+
+{% endblock %}

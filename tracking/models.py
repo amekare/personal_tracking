@@ -19,38 +19,42 @@ class Incidencia(models.Model):
         ('Sub', 'Subtarea'),
         ('Epi', 'Epic'),
     )
-    #padre = models.ManyToManyField('Incidencia')
+    ESTADO_CHOICES = (
+        ('1', 'Por hacer'),
+        ('2', 'En proceso'),
+        ('3', 'Desarrollado'),
+        ('4', 'En pruebas'),
+        ('5', 'Aprobado por PO'),
+        ('6', 'Hecho'),
+        ('7', 'Pagada'),
+        ('8', 'Por pagar'),
+    )
+    padre = models.ForeignKey('self', null=True, blank=True, on_delete=models.DO_NOTHING)
     tipo = models.CharField(choices=TIPO_CHOICES, max_length=3, null=False)
-    codigo = models.CharField(max_length=32, null=False, primary_key=True)
+    codigo = models.CharField(max_length=32, unique=True)
     cartel = models.ForeignKey('Cartel', on_delete=models.DO_NOTHING, null=False)
     horas_estimadas = models.FloatField(null=False)
     horas_trabajadas = models.FloatField(null=False)
     sprint_inicio = models.ForeignKey('Sprint', on_delete=models.DO_NOTHING, null=False, related_name="sprint_inicio")
-    sprint_fin = models.ForeignKey('Sprint', on_delete=models.DO_NOTHING, null=True, related_name="sprint_fin", blank=True)
+    sprint_fin = models.ForeignKey('Sprint', on_delete=models.DO_NOTHING, null=True, related_name="sprint_fin",
+                                   blank=True)
     reasignada = models.BooleanField(null=False, default=False)
     fecha_produccion = models.DateField(null=True, blank=True)
+    estado = models.CharField(choices=ESTADO_CHOICES, max_length=2, null=False)
 
     def __str__(self):
         return self.codigo
 
 
-class Asignado(models.Model):
-    responsable = models.ManyToManyField('Responsable')
-    incidencia = models.ManyToManyField('Incidencia')
-    fecha = models.DateField(null=False, blank=False)
-
-    def __str__(self):
-        return self.incidencia + " " + self.responsable
-
-
 class Sprint(models.Model):
     fecha_inicio = models.DateField(null=False, blank=False)
     fecha_fin = models.DateField(null=False, blank=False)
+    fecha_revision = models.DateField(null=False, blank=False)
     numero = models.IntegerField(null=False, primary_key=True)
     proyecto = models.CharField(max_length=64, null=False)
 
     def __str__(self):
-        return "Sprint: " + self.numero.__str__() + "-" + self.proyecto
+        return "Sprint " + self.numero.__str__() + "-" + self.proyecto
 
 
 class Cartel(models.Model):
@@ -59,10 +63,10 @@ class Cartel(models.Model):
     descripcion = models.CharField(max_length=256, null=False)
     horas_asignadas = models.FloatField(null=False)
     horas_disponibles = models.FloatField(null=False)
-    #padre = models.ForeignKey('Cartel', on_delete=models.DO_NOTHING, null=True)
+    padre = models.ForeignKey('Cartel', on_delete=models.DO_NOTHING, null=True, blank=True)
 
     def __str__(self):
-        return "Cartel: " + self.numero.__str__()
+        return self.numero.__str__()
 
 
 class Planificacion(models.Model):
@@ -76,19 +80,22 @@ class Planificacion(models.Model):
         ('7', 'Pagada'),
         ('8', 'Por pagar'),
     )
-    sprint = models.ManyToManyField('Sprint')
-    incidencia = models.ManyToManyField('Incidencia')
+    estado_inicio = models.CharField(choices=ESTADO_CHOICES, max_length=2, null=False)
+    estado_fin = models.CharField(choices=ESTADO_CHOICES, max_length=2, null=False, blank=True)
+
+    sprint = models.ForeignKey('Sprint', on_delete=models.DO_NOTHING, null=False, blank=False)
+    incidencia = models.ForeignKey('Incidencia', on_delete=models.DO_NOTHING, null=False, blank=False)
     fecha = models.DateField(null=False, blank=False)
-    estado = models.CharField(choices=ESTADO_CHOICES, max_length=2, null=False)
+    asignado = models.ForeignKey('Responsable', on_delete=models.DO_NOTHING, null=False, blank=False)
 
     def __str__(self):
-        return self.sprint + " " + self.incidencia
+        return self.sprint.__str__() + "(" + self.fecha.__str__() + ") -" +self.incidencia.codigo
 
 
 class Observacion(models.Model):
     fecha = models.DateField(null=False, blank=False)
     descripcion = models.CharField(max_length=512)
-    incidencia = models.ForeignKey('Incidencia', on_delete=models.DO_NOTHING, null=False)
+    planificacion = models.ForeignKey('Planificacion', on_delete=models.DO_NOTHING, null=False)
 
     def __str__(self):
-        return self.fecha + " " + self.incidencia
+        return self.fecha.__str__() + " " + self.planificacion.__str__()

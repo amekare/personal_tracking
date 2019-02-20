@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container">
+        <h1 class="h1">Incidencias</h1>
+        <table class="table table-bordered text-center">
+            <thead class="table-dark">
+            <tr>
+                <th>Número</th>
+                <th>Proyecto</th>
+                <th>Horas estimadas</th>
+                <th>Horas trabajadas</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for incidencia in incidencias %}
+                <tr>
+                    <td><a href="{% url 'incidencia-detail' pk=incidencia.pk %}"> {{ incidencia.codigo }}</a></td>
+                    <td>{{ incidencia.sprint_inicio.proyecto }}</td>
+                    <td>{{ incidencia.horas_estimadas }}</td>
+                    <td>{{ incidencia.horas_trabajadas }}</td>
+                </tr>
+
+            {% endfor %}
+            </tbody>
+
+
+        </table>
+
+    </div>
+
+
+{% endblock %}

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from tracking.models import Incidencia, Sprint, Responsable, Planificacion, Cartel
+from tracking.models import Incidencia, Sprint, Responsable, Planificacion, Cartel, Observacion
 
 # Register your models here.
 
@@ -8,3 +8,4 @@ admin.site.register(Sprint)
 admin.site.register(Responsable)
 admin.site.register(Planificacion)
 admin.site.register(Cartel)
+admin.site.register(Observacion)

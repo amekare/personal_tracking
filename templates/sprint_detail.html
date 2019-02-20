@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}Sprint {{ sprint.numero }}{% endblock %}
+{% block content %}
+    <a type="button" class="btn btn-primary" href="{% url 'sprint-list' %}">Volver</a>
+    <hr>
+
+
+    <div class="card">
+
+        <div class="card-header">
+            <b>Sprint:</b> {{ sprint.numero }} - {{ sprint.proyecto }}
+        </div>
+        <div class="card-body">
+            <p><b>Fecha de inicio: </b>{{ sprint.fecha_inicio }} </p>
+            <p><b>Fecha de fin: </b> {{ sprint.fecha_fin }}</p>
+            <p><b>Fecha de revisión: </b>{{ sprint.fecha_revision }} </p>
+
+
+        </div>
+
+
+    </div>
+
+    <hr>
+    <a type="button" class="btn btn-success" href="{% url 'sprint-detail' sprint.pk %}">Update</a>
+    <a type="button" class="btn btn-danger " href="{% url 'sprint-detail' sprint.pk %}">Delete</a>
+{% endblock %}
+
+

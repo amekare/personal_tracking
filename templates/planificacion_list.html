@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container">
+        <h1 class="h1">Planificaciones</h1>
+        <table class="table table-bordered text-center ">
+            <thead class="table-dark">
+            <tr>
+                <th>Fecha</th>
+                <th>Sprint</th>
+                <th>Proyecto</th>
+                <th>Incidencia</th>
+                <th>Estado</th>
+                <th>Responsable</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for planificacion in planificaciones %}
+                <tr>
+                    <td><a href="{% url 'planificacion-detail' pk=planificacion.pk %}">{{ planificacion.fecha }}</a>
+                    </td>
+                    <td>
+                        <a href="{% url 'sprint-detail' pk=planificacion.sprint.pk %}">   {{ planificacion.sprint.numero }}</a>
+                    </td>
+                    <td>{{ planificacion.sprint.proyecto }}</td>
+                    <td>
+                        <a href="{% url 'incidencia-detail' pk=planificacion.incidencia.pk %}">{{ planificacion.incidencia }}</a>
+                    </td>
+                    <td>{{ planificacion.get_estado_inicio_display }}</td>
+
+                    <td>{{ planificacion.asignado }}</td>
+                </tr>
+
+            {% endfor %}
+            </tbody>
+
+
+        </table>
+
+    </div>
+
+
+{% endblock %}
