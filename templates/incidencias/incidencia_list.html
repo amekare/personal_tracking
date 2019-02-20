@@ -5,8 +5,25 @@
     <title>Title</title>
 </head>
 <body>
-{% for incidencia in incidencias %}
-    {{ incidencia }}
-{% endfor %}
+<table>
+    <thead>
+    <tr>
+        <th>Número</th>
+        <th>Proyecto</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for incidencia in incidencias %}
+        <tr>
+            <td>{{ incidencia.codigo }}</td>
+            <td>{{ incidencia.sprint_inicio.proyecto }}</td>
+        </tr>
+
+    {% endfor %}
+    </tbody>
+
+
+</table>
+
 </body>
 </html>

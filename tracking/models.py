@@ -26,7 +26,7 @@ class Incidencia(models.Model):
     horas_estimadas = models.FloatField(null=False)
     horas_trabajadas = models.FloatField(null=False)
     sprint_inicio = models.ForeignKey('Sprint', on_delete=models.DO_NOTHING, null=False, related_name="sprint_inicio")
-    sprint_fin = models.ForeignKey('Sprint', on_delete=models.DO_NOTHING, null=True, related_name="sprint_fin")
+    sprint_fin = models.ForeignKey('Sprint', on_delete=models.DO_NOTHING, null=True, related_name="sprint_fin", blank=True)
     reasignada = models.BooleanField(null=False, default=False)
     fecha_produccion = models.DateField(null=True, blank=True)
 
@@ -50,7 +50,7 @@ class Sprint(models.Model):
     proyecto = models.CharField(max_length=64, null=False)
 
     def __str__(self):
-        return "Sprint: " + self.numero.__str__()
+        return "Sprint: " + self.numero.__str__() + "-" + self.proyecto
 
 
 class Cartel(models.Model):
@@ -76,7 +76,7 @@ class Planificacion(models.Model):
         ('7', 'Pagada'),
         ('8', 'Por pagar'),
     )
-    sprint = models.ManyToManyField('Cartel')
+    sprint = models.ManyToManyField('Sprint')
     incidencia = models.ManyToManyField('Incidencia')
     fecha = models.DateField(null=False, blank=False)
     estado = models.CharField(choices=ESTADO_CHOICES, max_length=2, null=False)
