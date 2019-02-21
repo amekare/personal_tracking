@@ -10,19 +10,16 @@
     </script>
 </head>
 <body>
-{% if user.is_authenticated %}
-    {% include 'includes/nav.html' %}
-    <div class="container">
-        <div class="content">
-            <br>
-            {% block content %}
-            {% endblock %}
+<div class="container">
+    <div class="row justify-content-center align-items-center" style="height:100vh">
+        <div class="col-5">
+            <div class="card">
+                <div class="card-body text-left">
+                    <p>You are logged out. <a href="{% url 'blog_login' %}">Click here</a> to login again.</p>
+
+                </div>
+            </div>
         </div>
     </div>
-{% else %}
-    <p>You are not logged in</p>
-    <a href="{% url 'login' %}">login</a>
-{% endif %}
-
-</body>
-</html>
+</div>
+ 

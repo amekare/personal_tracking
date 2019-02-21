@@ -31,6 +31,7 @@ class Incidencia(models.Model):
     )
     padre = models.ForeignKey('self', null=True, blank=True, on_delete=models.DO_NOTHING)
     tipo = models.CharField(choices=TIPO_CHOICES, max_length=3, null=False)
+    descripcion = models.CharField(max_length=256, null=False)
     codigo = models.CharField(max_length=32, unique=True)
     cartel = models.ForeignKey('Cartel', on_delete=models.DO_NOTHING, null=False)
     horas_estimadas = models.FloatField(null=False)

@@ -4,6 +4,10 @@ from .models import Incidencia, Sprint, Planificacion, Observacion
 
 # Create your views here.
 
+def index(request):
+    return render(request, 'index.html', {})
+
+
 # Incidencias
 def incidencia_list(request):
     incidencias = Incidencia.objects.order_by('codigo')
