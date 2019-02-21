@@ -47,11 +47,13 @@
             <th>Planificación</th>
             </thead>
             <tbody>
-            <tr>
+            
                 {% for observacion in observaciones %}
+                <tr>
                     <td>{{ observacion.fecha }}</td>
                     <td>{{ observacion.descripcion }}</td>
                     <td>{{ observacion.planificacion.sprint }}</td>
+                 <tr>
                 {% endfor %}
 
             </tr>
