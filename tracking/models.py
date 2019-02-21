@@ -59,7 +59,7 @@ class Sprint(models.Model):
 
 
 class Cartel(models.Model):
-    numero = models.IntegerField(null=False)
+    numero = models.FloatField(null=False)
     modificada = models.BooleanField(null=False, default=False)
     descripcion = models.CharField(max_length=256, null=False)
     horas_asignadas = models.FloatField(null=False)
