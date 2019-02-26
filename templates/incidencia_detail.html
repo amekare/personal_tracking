@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 
+
 {% block title %}Incidencia {{ incidencia.codigo }}{% endblock %}
 {% block content %}
     <a type="button" class="btn btn-primary" href="{% url 'incidencia-list' %}">Volver</a>
@@ -10,9 +11,7 @@
 
         <div class="card-header">
             <b>Incidencia:</b> {{ incidencia.codigo }} - {{ incidencia.get_tipo_display }}
-            {% if incidencia.padre is not None %}
-                ({{ incidencia.padre }} )
-            {% endif %}
+
         </div>
         <div class="card-body">
 
@@ -24,11 +23,36 @@
                         <br/>
                         <b>Cartel: </b> {{ incidencia.cartel }}
                         <br/>
+                        <b>Padre:</b>
+                        {% if incidencia.padre is None %}
+                            ---
+                        {% else %}
+                            <a href="{% url 'incidencia-detail' pk=incidencia.padre.pk %}"> {{ incidencia.padre }} </a>
+                        {% endif %}
+                        <br/>
+                        <b>Reasignada: </b> {{ incidencia.reasignada }}
+                        <br/>
+                        <b>Fecha en producción: </b>
+                        {% if incidencia.fecha_produccion is None %}
+                            ---
+                        {% else %}
+                            {{ incidencia.fecha_produccion }}
+                            <br/>
+                        {% endif %}
                     </div>
                     <div class="col-6 ">
                         <b>Horas estimadas:</b> {{ incidencia.horas_estimadas }}
                         <br/>
                         <b>Horas trabajadas:</b> {{ incidencia.horas_trabajadas }}
+                        <br/>
+                        <b>Sprint de inicio:</b> {{ incidencia.sprint_inicio }}
+                        <br/>
+                        <b>Sprint de fin:</b>
+                        {% if incidencia.sprint_fin is None %}
+                            ---
+                        {% else %}
+                            {{ incidencia.sprint_fin }}
+                        {% endif %}
                         <br/>
                     </div>
                 </div>
@@ -47,14 +71,14 @@
             <th>Planificación</th>
             </thead>
             <tbody>
-            
-                {% for observacion in observaciones %}
+
+            {% for observacion in observaciones %}
                 <tr>
                     <td>{{ observacion.fecha }}</td>
                     <td>{{ observacion.descripcion }}</td>
                     <td>{{ observacion.planificacion.sprint }}</td>
-                 <tr>
-                {% endfor %}
+                <tr>
+            {% endfor %}
 
             </tr>
             </tbody>
