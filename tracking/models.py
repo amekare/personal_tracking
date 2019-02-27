@@ -10,6 +10,9 @@ class Responsable(models.Model):
     def __str__(self):
         return self.nombre
 
+    class Meta:
+        ordering = ["nombre"]
+
 
 class Incidencia(models.Model):
     TIPO_CHOICES = (
@@ -46,6 +49,9 @@ class Incidencia(models.Model):
     def __str__(self):
         return self.codigo
 
+    class Meta:
+        ordering = ["codigo"]
+
 
 class Sprint(models.Model):
     fecha_inicio = models.DateField(null=False, blank=False)
@@ -56,6 +62,9 @@ class Sprint(models.Model):
 
     def __str__(self):
         return "Sprint " + self.numero.__str__() + "-" + self.proyecto
+
+    class Meta:
+        ordering = ["numero", "proyecto"]
 
 
 class Cartel(models.Model):
@@ -68,6 +77,9 @@ class Cartel(models.Model):
 
     def __str__(self):
         return self.numero.__str__()
+
+    class Meta:
+        ordering = ["numero"]
 
 
 class Planificacion(models.Model):
@@ -96,7 +108,11 @@ class Planificacion(models.Model):
     asignado = models.ForeignKey('Responsable', on_delete=models.DO_NOTHING, null=False, blank=False)
 
     def __str__(self):
-        return self.sprint.__str__() + "(" + self.fecha.__str__() + ") -" +self.incidencia.codigo
+        return self.sprint.__str__() + "(" + self.fecha.__str__() + ") -" + self.incidencia.codigo
+
+    class Meta:
+        ordering = ["sprint", "fecha"]
+
 
 
 class Observacion(models.Model):
@@ -106,3 +122,7 @@ class Observacion(models.Model):
 
     def __str__(self):
         return self.fecha.__str__() + " " + self.planificacion.__str__()
+
+    class Meta:
+        ordering = ["fecha"]
+

@@ -1,11 +1,19 @@
 from django.shortcuts import render, get_object_or_404
 from .models import Incidencia, Sprint, Planificacion, Observacion
+from datetime import date
 
 
 # Create your views here.
 
 def index(request):
-    return render(request, 'index.html', {})
+    no_activos = ['6', '7']
+
+    activas = Planificacion.objects.filter(sprint__fecha_inicio__lte=date.today(),
+                                           sprint__fecha_fin__gte=date.today()).exclude(
+        incidencia__estado__in=no_activos).count()
+    hechas = Incidencia.objects.filter(estado='6').count()
+    sprint_activos = Sprint.objects.filter(fecha_inicio__lte=date.today(), fecha_fin__gte=date.today())
+    return render(request, 'index.html', {'activas': activas, 'hechas': hechas, 'sprints': sprint_activos})
 
 
 # Incidencias
@@ -17,7 +25,7 @@ def incidencia_list(request):
 def incidencia_detail(request, pk):
     incidencia = get_object_or_404(Incidencia, pk=pk)
     observaciones = Observacion.objects.filter(planificacion__incidencia=incidencia)
-    return render(request, 'incidencia_detail.html', {'incidencia': incidencia, 'observaciones':observaciones})
+    return render(request, 'incidencia_detail.html', {'incidencia': incidencia, 'observaciones': observaciones})
 
 
 # Sprints
@@ -33,12 +41,11 @@ def sprint_detail(request, pk):
 
 # Planificacion
 def planificacion_list(request):
-    planificaciones = Planificacion.objects.all()
-    return render(request, 'planificacion_list.html', {'planificaciones': planificaciones})
+    sprints = Sprint.objects.order_by('numero')
+    return render(request, 'planificacion_list.html', {'sprints': sprints})
 
 
 def planificacion_detail(request, pk):
-    planificacion = get_object_or_404(Planificacion, pk=pk)
-    sprint = get_object_or_404(Sprint, pk=planificacion.sprint.pk)
-    planificaciones = Planificacion.objects.filter(sprint=sprint)
-    return render(request, 'planificacion_detail.html', {'planificacion': planificacion, 'planificaciones':planificaciones})
+    planificaciones = Planificacion.objects.filter(sprint__pk=pk)
+    return render(request, 'planificacion_detail.html',
+                  {'planificacion': planificaciones[0], 'planificaciones': planificaciones})

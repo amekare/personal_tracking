@@ -10,57 +10,66 @@
 
         <div class="card-header">
             <b>Planificación:</b> Sprint {{ planificacion.sprint.numero }} - {{ planificacion.fecha }}
-        </div>
-        <div class="card-body">
-
-            <table class="table table-bordered text-center">
-                <thead class="thead-dark">
-                <th>Incidencia</th>
-                <th>Estado inicio</th>
-                <th>Estado fin</th>
-                <th>Asignado</th>
-                <th>Horas asignadas</th>
-                <th>Observacines</th>
-                </thead>
-
-                {% for plani in planificaciones %}
-                    <tr>
-                        <td>
-                            <a href="{% url 'incidencia-detail' pk=plani.incidencia.pk %}"> {{ plani.incidencia.codigo }}</a>
-                        </td>
-                        <td>{{ plani.get_estado_inicio_display }}</td>
-                        {% if plani.estado_fin %}
-                            <td>{{ plani.get_estado_fin_display }}</td>
-                        {% else %}
-
-                            <td>---</td>
-                        {% endif %}
-
-                        <td>{{ plani.asignado }}</td>
-                        <td>{{ plani.incidencia.horas_estimadas }}</td>
-                        {% if plani.observacion_set.all %}
-
-                            <td> {% for o in plani.observacion_set.all %}
-
-                                <li>{{ o.descripcion }} ({{ o.fecha | date:"d-M-Y" }})</li>
-
-                            {% endfor %}
-                            </td>
-                        {% else %}
-                            <td>---</td>
-
-                        {% endif %}
-                    </tr>
-                {% endfor %}
-
-            </table>
-
-
+            <br>
+            <b>Inicio:</b> {{ planificacion.sprint.fecha_inicio }}
+            <br>
+            <b>Fin:</b> {{ planificacion.sprint.fecha_fin }}
+            <br>
+            <b>Revisión:</b> {{ planificacion.sprint.fecha_fin }}
         </div>
 
 
     </div>
+    <hr>
+    <div class="container">
+        <table class="table table-bordered text-center">
+            <thead class="thead-dark">
+            <th>Incidencia</th>
+            <th>Estado inicio</th>
+            <th>Estado fin</th>
+            <th>Asignado</th>
+            <th>Horas asignadas</th>
+            <th>Horas trabajadas</th>
+            <th>Fecha asignada</th>
+            <th>Observaciones</th>
+            </thead>
 
+            {% for plani in planificaciones %}
+                <tr>
+                    <td>
+                        <a href="{% url 'incidencia-detail' pk=plani.incidencia.pk %}"> {{ plani.incidencia.codigo }}</a>
+                    </td>
+                    <td>{{ plani.get_estado_inicio_display }}</td>
+                    {% if plani.estado_fin %}
+                        <td>{{ plani.get_estado_fin_display }}</td>
+                    {% else %}
+
+                        <td>---</td>
+                    {% endif %}
+
+                    <td>{{ plani.asignado }}</td>
+                    <td>{{ plani.incidencia.horas_estimadas }}</td>
+                    <td>{{ plani.incidencia.horas_trabajadas }}</td>
+                    <td>{{ plani.fecha | date:"d-M-Y" }}</td>
+                    {% if plani.observacion_set.all %}
+
+                        <td> {% for o in plani.observacion_set.all %}
+
+                            <li>{{ o.descripcion }} ({{ o.fecha | date:"d-M-Y" }})</li>
+
+                        {% endfor %}
+                        </td>
+                    {% else %}
+                        <td>---</td>
+
+                    {% endif %}
+                </tr>
+            {% endfor %}
+
+        </table>
+
+
+    </div>
     <hr>
 
 {% endblock %}
