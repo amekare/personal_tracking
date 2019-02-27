@@ -84,6 +84,7 @@ class Planificacion(models.Model):
         ('1', 'Pagada'),
         ('2', 'Por pagar'),
         ('3', 'Sin completar'),
+        ('4', 'Desarrollo CI'),
     )
     estado_inicio = models.CharField(choices=ESTADO_CHOICES, max_length=2, null=False)
     estado_fin = models.CharField(choices=ESTADO_CHOICES, max_length=2, null=False, blank=True)
