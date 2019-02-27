@@ -78,12 +78,16 @@ class Planificacion(models.Model):
         ('4', 'En pruebas'),
         ('5', 'Aprobado por PO'),
         ('6', 'Hecho'),
-        ('7', 'Pagada'),
-        ('8', 'Por pagar'),
-        ('9', 'Cancelada'),
+        ('7', 'Cancelada'),
+    )
+    PAGO_CHOICES = (
+        ('1', 'Pagada'),
+        ('2', 'Por pagar'),
+        ('3', 'Sin completar'),
     )
     estado_inicio = models.CharField(choices=ESTADO_CHOICES, max_length=2, null=False)
     estado_fin = models.CharField(choices=ESTADO_CHOICES, max_length=2, null=False, blank=True)
+    pago = models.CharField(choices=PAGO_CHOICES, max_length=2, null=False, blank=False, default='3')
 
     sprint = models.ForeignKey('Sprint', on_delete=models.DO_NOTHING, null=False, blank=False)
     incidencia = models.ForeignKey('Incidencia', on_delete=models.DO_NOTHING, null=False, blank=False)
