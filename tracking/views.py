@@ -46,6 +46,7 @@ def planificacion_list(request):
 
 
 def planificacion_detail(request, pk):
-    planificaciones = Planificacion.objects.filter(sprint__pk=pk)
+    sprint = get_object_or_404(Sprint, pk=pk)
+    planificaciones = Planificacion.objects.filter(sprint__pk=sprint.pk)
     return render(request, 'planificacion_detail.html',
-                  {'planificacion': planificaciones[0], 'planificaciones': planificaciones})
+                  {'sprint': sprint, 'planificaciones': planificaciones})
