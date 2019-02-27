@@ -26,8 +26,8 @@ class Incidencia(models.Model):
         ('4', 'En pruebas'),
         ('5', 'Aprobado por PO'),
         ('6', 'Hecho'),
-        ('7', 'Pagada'),
-        ('8', 'Por pagar'),
+        ('7', 'Cancelada'),
+
     )
     padre = models.ForeignKey('self', null=True, blank=True, on_delete=models.DO_NOTHING)
     tipo = models.CharField(choices=TIPO_CHOICES, max_length=3, null=False)
