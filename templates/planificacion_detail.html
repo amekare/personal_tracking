@@ -20,28 +20,39 @@
                 <th>Estado fin</th>
                 <th>Asignado</th>
                 <th>Horas asignadas</th>
-                <th></th>
-                <th>Observación</th>
+                <th>Observacines</th>
                 </thead>
-                <tr>
-                    {% for plani in planificaciones %}
 
+                {% for plani in planificaciones %}
+                    <tr>
                         <td>
                             <a href="{% url 'incidencia-detail' pk=plani.incidencia.pk %}"> {{ plani.incidencia.codigo }}</a>
                         </td>
                         <td>{{ plani.get_estado_inicio_display }}</td>
-                        {% if plani.estado_fin is None %}
-                            <td>---</td>
-                        {% else %}
+                        {% if plani.estado_fin %}
                             <td>{{ plani.get_estado_fin_display }}</td>
+                        {% else %}
+
+                            <td>---</td>
                         {% endif %}
+
                         <td>{{ plani.asignado }}</td>
                         <td>{{ plani.incidencia.horas_estimadas }}</td>
-                        <td><a href="#">Editar</a></td>
-                        <td><a href="#">Observación</a></td>
+                        {% if plani.observacion_set.all %}
 
-                    {% endfor %}
-                </tr>
+                            <td> {% for o in plani.observacion_set.all %}
+
+                                <li>{{ o.descripcion }} ({{ o.fecha | date:"d-M-Y" }})</li>
+
+                            {% endfor %}
+                            </td>
+                        {% else %}
+                            <td>---</td>
+
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+
             </table>
 
 

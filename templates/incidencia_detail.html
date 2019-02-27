@@ -11,7 +11,8 @@
 
         <div class="card-header">
             <b>Incidencia:</b> {{ incidencia.codigo }} - {{ incidencia.get_tipo_display }}
-
+            <br>
+            {{ incidencia.descripcion }}
         </div>
         <div class="card-body">
 
@@ -63,7 +64,9 @@
 
     </div>
     <hr>
+
     <div class="container">
+    <h2>Observaciones</h2>
         <table class="table table-bordered text-center">
             <thead class="table-dark">
             <th>Fecha</th>
@@ -76,7 +79,7 @@
                 <tr>
                     <td>{{ observacion.fecha }}</td>
                     <td>{{ observacion.descripcion }}</td>
-                    <td>{{ observacion.planificacion.sprint }}</td>
+                    <td> <a href="{%  url 'planificacion-detail' pk=observacion.planificacion.pk %}"> {{ observacion.planificacion.sprint }}</a></td>
                 <tr>
             {% endfor %}
 
