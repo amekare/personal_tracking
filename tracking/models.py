@@ -57,7 +57,7 @@ class Sprint(models.Model):
     fecha_inicio = models.DateField(null=False, blank=False)
     fecha_fin = models.DateField(null=False, blank=False)
     fecha_revision = models.DateField(null=False, blank=False)
-    numero = models.IntegerField(null=False, primary_key=True)
+    numero = models.IntegerField(null=False)
     proyecto = models.CharField(max_length=64, null=False)
 
     def __str__(self):
@@ -65,6 +65,7 @@ class Sprint(models.Model):
 
     class Meta:
         ordering = ["numero", "proyecto"]
+        unique_together = ('numero', 'proyecto')
 
 
 class Cartel(models.Model):
@@ -100,19 +101,17 @@ class Planificacion(models.Model):
     )
     estado_inicio = models.CharField(choices=ESTADO_CHOICES, max_length=2, null=False)
     estado_fin = models.CharField(choices=ESTADO_CHOICES, max_length=2, null=False, blank=True)
-    pago = models.CharField(choices=PAGO_CHOICES, max_length=2, null=False, blank=False, default='3')
-
     sprint = models.ForeignKey('Sprint', on_delete=models.DO_NOTHING, null=False, blank=False)
     incidencia = models.ForeignKey('Incidencia', on_delete=models.DO_NOTHING, null=False, blank=False)
     fecha = models.DateField(null=False, blank=False)
     asignado = models.ForeignKey('Responsable', on_delete=models.DO_NOTHING, null=False, blank=False)
+    pago = models.CharField(choices=PAGO_CHOICES, max_length=2, null=False, blank=False, default='3')
 
     def __str__(self):
         return self.sprint.__str__() + "(" + self.fecha.__str__() + ") -" + self.incidencia.codigo
 
     class Meta:
         ordering = ["sprint", "fecha"]
-
 
 
 class Observacion(models.Model):
@@ -125,4 +124,3 @@ class Observacion(models.Model):
 
     class Meta:
         ordering = ["fecha"]
-
