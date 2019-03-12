@@ -110,6 +110,18 @@ class Planificacion(models.Model):
     def __str__(self):
         return self.sprint.__str__() + "(" + self.fecha.__str__() + ") -" + self.incidencia.codigo
 
+    def save(self, *args, **kwargs):
+        if self.estado_fin:
+            self.incidencia.estado = self.estado_fin
+            if self.estado_fin == "6":
+                self.incidencia.sprint_fin = self.sprint
+            self.incidencia.save()
+
+        super(Planificacion, self).save(*args, **kwargs)
+
+    def get_sprint(self, obj):
+        return obj.sprint
+
     class Meta:
         ordering = ["sprint", "fecha"]
 
