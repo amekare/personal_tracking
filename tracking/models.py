@@ -99,8 +99,8 @@ class Planificacion(models.Model):
         ('3', 'Sin completar'),
         ('4', 'Desarrollo CI'),
     )
-    estado_inicio = models.CharField(choices=ESTADO_CHOICES, max_length=2, null=False)
-    estado_fin = models.CharField(choices=ESTADO_CHOICES, max_length=2, null=False, blank=True)
+    estado_inicio = models.CharField(choices=ESTADO_CHOICES, max_length=2, null=True, blank=True)
+    estado_fin = models.CharField(choices=ESTADO_CHOICES, max_length=2, null=True, blank=True)
     sprint = models.ForeignKey('Sprint', on_delete=models.DO_NOTHING, null=False, blank=False)
     incidencia = models.ForeignKey('Incidencia', on_delete=models.DO_NOTHING, null=False, blank=False)
     fecha = models.DateField(null=False, blank=False)
@@ -111,6 +111,8 @@ class Planificacion(models.Model):
         return self.sprint.__str__() + "(" + self.fecha.__str__() + ") -" + self.incidencia.codigo
 
     def save(self, *args, **kwargs):
+        if not self.estado_inicio:
+            self.estado_inicio = self.incidencia.estado
         if self.estado_fin:
             self.incidencia.estado = self.estado_fin
             if self.estado_fin == "6":
