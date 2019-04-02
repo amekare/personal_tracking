@@ -108,6 +108,12 @@ class Planificacion(models.Model):
     asignado = models.ForeignKey('Responsable', on_delete=models.DO_NOTHING, null=False, blank=False)
     pago = models.CharField(choices=PAGO_CHOICES, max_length=2, null=False, blank=False, default='3')
 
+    def horas_estimadas(self):
+        return self.incidencia.horas_estimadas
+
+    def horas_trabajadas(self):
+        return self.incidencia.horas_trabajadas
+
     def __str__(self):
         return self.sprint.__str__() + "(" + self.fecha.__str__() + ") -" + self.incidencia.codigo
 

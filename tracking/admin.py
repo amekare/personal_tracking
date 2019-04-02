@@ -28,7 +28,9 @@ class CartelAdmin(admin.ModelAdmin):
 
 
 class PlanificacionAdmin(admin.ModelAdmin):
-    list_display = ('sprint', 'incidencia', 'asignado', 'estado_inicio', 'estado_fin', 'pago')
+    list_display = (
+        'sprint', 'incidencia', 'asignado', 'estado_inicio', 'estado_fin', 'pago', 'horas_estimadas',
+        'horas_trabajadas')
     search_fields = ('sprint__numero', 'sprint__proyecto', 'incidencia__codigo', 'asignado__nombre')
     ordering = ("sprint",)
     list_filter = ("pago", "sprint", "asignado")
