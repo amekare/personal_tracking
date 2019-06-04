@@ -51,11 +51,11 @@ class Contratacion(models.Model):
 
 class Bitacora_contratacion(models.Model):
     observacion = models.CharField(max_length=1024, null=False, blank=False)
-    fecha = models.DateTimeField(auto_now=True, auto_now_add=True, blank=True)
+    fecha = models.DateTimeField(auto_now_add=True, blank=True)
     contratacion = models.ForeignKey('Contratacion', null=False, blank=False, on_delete=models.DO_NOTHING)
 
     # cambiar esto
-    usuario = models.ForeignKey('auth.User')
+    usuario = models.CharField(max_length=1024, null=False, blank=False)
 
     def __str__(self):
         return "" + self.codigo + "-" + self.nombre
@@ -75,11 +75,11 @@ class Producto(models.Model):
 
 class Bitacora_producto(models.Model):
     observacion = models.CharField(max_length=1024, null=False, blank=False)
-    fecha = models.DateTimeField(auto_now=True, auto_now_add=True, blank=True)
+    fecha = models.DateTimeField(auto_now_add=True, blank=True)
     producto = models.ForeignKey('Producto', null=False, blank=False, on_delete=models.DO_NOTHING)
 
     # cambiar esto
-    usuario = models.ForeignKey('auth.User')
+    usuario = models.CharField(max_length=1024, null=False, blank=False)
 
     def __str__(self):
         return "" + self.codigo + "-" + self.nombre
@@ -158,7 +158,7 @@ class Sprint(models.Model):
     fecha_fin = models.DateField(null=False, blank=False)
     fecha_revision = models.DateField(null=False, blank=False)
     numero = models.IntegerField(null=False, blank=False)
-    proyecto = models.ForeignKey('Proyecto', null=False)
+    proyecto = models.ForeignKey('Proyecto', null=False, on_delete=models.DO_NOTHING)
 
     def __str__(self):
         return "Sprint " + self.numero.__str__() + "-" + self.proyecto
@@ -205,7 +205,7 @@ class Planificacion(models.Model):
         return obj.sprint
 
     class Meta:
-        ordering = ["sprint", "fecha"]
+        ordering = ["sprint", "fecha_asignada"]
 
 
 class Observacion(models.Model):
