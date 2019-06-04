@@ -98,6 +98,7 @@ class Incidencia(models.Model):
                                    blank=True)
     reasignada = models.BooleanField(null=False, default=False)
     fecha_produccion = models.DateField(null=True, blank=True)
+    estado = models.CharField(choices=ESTADO_CHOICES, max_length=2, null=False)
 
     def __str__(self):
         return self.codigo
@@ -134,6 +135,11 @@ class Sprint(models.Model):
     def __str__(self):
         return "Sprint " + self.numero.__str__() + "-" + self.proyecto
 
+    class Meta:
+        ordering = ["numero", "proyecto"]
+        unique_together = ('numero', 'proyecto')
+
+
 
 class Planificacion(models.Model):
     ESTADO_CHOICES = (
@@ -154,7 +160,24 @@ class Planificacion(models.Model):
     fecha_asignada = models.DateField(null=False, blank=False, auto_now_add=True)
 
     def __str__(self):
-        return self.sprint.__str__() + "(" + self.fecha_asignada.__str__() + ") -" + self.incidencia.codigo
+        return self.sprint.__str__() + "(" + self.fecha.__str__() + ") -" + self.incidencia.codigo
+
+    def save(self, *args, **kwargs):
+        if not self.estado_inicio:
+            self.estado_inicio = self.incidencia.estado
+        if self.estado_fin:
+            self.incidencia.estado = self.estado_fin
+            if self.estado_fin == "6":
+                self.incidencia.sprint_fin = self.sprint
+            self.incidencia.save()
+
+        super(Planificacion, self).save(*args, **kwargs)
+
+    def get_sprint(self, obj):
+        return obj.sprint
+
+    class Meta:
+        ordering = ["sprint", "fecha"]
 
 
 class Observacion(models.Model):
@@ -164,3 +187,6 @@ class Observacion(models.Model):
 
     def __str__(self):
         return self.fecha.__str__() + " " + self.planificacion.__str__()
+
+    class Meta:
+        ordering = ["fecha"]

@@ -8,8 +8,10 @@
             <tr>
                 <th>Número</th>
                 <th>Proyecto</th>
+                <th>Estado</th>
                 <th>Horas estimadas</th>
                 <th>Horas trabajadas</th>
+                <th>Cartel</th>
             </tr>
             </thead>
             <tbody>
@@ -17,8 +19,11 @@
                 <tr>
                     <td><a href="{% url 'incidencia-detail' pk=incidencia.pk %}"> {{ incidencia.codigo }}</a></td>
                     <td>{{ incidencia.sprint_inicio.proyecto }}</td>
+                    <td>{{ incidencia.get_estado_display }}</td>
                     <td>{{ incidencia.horas_estimadas }}</td>
                     <td>{{ incidencia.horas_trabajadas }}</td>
+                    <td>{{ incidencia.cartel }}</td>
+
                 </tr>
 
             {% endfor %}
