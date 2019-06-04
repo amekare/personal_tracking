@@ -4,10 +4,13 @@ from django.db import models
 
 class Contratista(models.Model):
     nombre = models.CharField(max_length=32)
+    apellido1 = models.CharField(max_length=32)
+    apellido2 = models.CharField(max_length=32)
     identificacion = models.CharField(max_length=128)
+    email = models.CharField(max_length=128)
 
     def __str__(self):
-        return self.nombre
+        return self.nombre + " " + self.apellido1 + " " + self.apellido2
 
 
 class Proyecto(models.Model):
@@ -21,8 +24,9 @@ class Proyecto(models.Model):
 
 class Contratacion(models.Model):
     TIPO_CHOICES = (
-        ('1', 'Externa'),
-        ('2', 'Interna'),
+        ('1', 'Externa por horas'),
+        ('2', 'Externa por productos'),
+        ('3', 'Interna CI'),
     )
 
     ROL_CHOICES = (
@@ -33,26 +37,25 @@ class Contratacion(models.Model):
 
     tipo = models.CharField(choices=TIPO_CHOICES, max_length=3, null=False, blank=False)
     rol = models.CharField(choices=ROL_CHOICES, max_length=3, null=False, blank=False)
-    contratista = models.ForeignKey('Contratista', null=False, blank=False, on_delete=models.DO_NOTHING)
     proyecto = models.ForeignKey('Proyecto', null=False, blank=False, on_delete=models.DO_NOTHING)
-    contrato = models.CharField(max_length=1024, null=False, blank=False)
-    orden_compra = models.CharField(max_length=128, null=False, blank=False)
-    horas_contratadas = models.FloatField(null=False)
-    horas_consumidas = models.FloatField(null=False)
-    presupuesto_asignado = models.FloatField(null=False)
-    presupuesto_consumido = models.FloatField(null=False)
+    contratista = models.ForeignKey('Contratista', null=False, blank=False, on_delete=models.DO_NOTHING)
+    contrato = models.CharField(max_length=1024, null=True, blank=True)
+    orden_compra = models.CharField(max_length=128, null=True, blank=True)
+    horas_contratadas = models.FloatField(null=True)
+    horas_consumidas = models.FloatField(null=False, default=0)
+    presupuesto_adjudicado = models.FloatField(null=True)
+    presupuesto_consumido = models.FloatField(null=True)
     fecha_inicio = models.DateField(null=False, blank=False)
     fecha_fin = models.DateField(null=True, blank=True)
-    vigencia_dias = models.IntegerField(null=False, blank=False)
-    pago_hora = models.FloatField(null=False, blank=False)
 
 
 class Bitacora_contratacion(models.Model):
     observacion = models.CharField(max_length=1024, null=False, blank=False)
     fecha = models.DateTimeField(auto_now=True, auto_now_add=True, blank=True)
+    contratacion = models.ForeignKey('Contratacion', null=False, blank=False, on_delete=models.DO_NOTHING)
+
     # cambiar esto
     usuario = models.ForeignKey('auth.User')
-    contratacion = models.ForeignKey('Contratacion', null=False, blank=False, on_delete=models.DO_NOTHING)
 
     def __str__(self):
         return "" + self.codigo + "-" + self.nombre
@@ -62,9 +65,24 @@ class Producto(models.Model):
     numero = models.FloatField(blank=False, null=False)
     descripcion = models.CharField(max_length=1024, null=False, blank=False)
     horas_estimadas = models.FloatField(null=False)
+    horas_utilizadas = models.FloatField(null=False)
     contratacion = models.ForeignKey('Contratacion', null=False, blank=False, on_delete=models.DO_NOTHING)
-    modificada = models.BooleanField(null=False, default=False)
-    padre = models.ForeignKey('Cartel', on_delete=models.DO_NOTHING, null=True, blank=True)
+    modificado = models.BooleanField(null=False, default=False)
+    pagado = models.BooleanField(null=False, default=False)
+    padre = models.ForeignKey('self', on_delete=models.DO_NOTHING, null=True, blank=True)
+
+
+
+class Bitacora_producto(models.Model):
+    observacion = models.CharField(max_length=1024, null=False, blank=False)
+    fecha = models.DateTimeField(auto_now=True, auto_now_add=True, blank=True)
+    producto = models.ForeignKey('Producto', null=False, blank=False, on_delete=models.DO_NOTHING)
+
+    # cambiar esto
+    usuario = models.ForeignKey('auth.User')
+
+    def __str__(self):
+        return "" + self.codigo + "-" + self.nombre
 
 
 class Incidencia(models.Model):
@@ -92,13 +110,13 @@ class Incidencia(models.Model):
     padre = models.ForeignKey('self', null=True, blank=True, on_delete=models.DO_NOTHING)
     horas_estimadas = models.FloatField(null=False, default=0)
     horas_trabajadas = models.FloatField(null=False, default=0)
+    horas_por_pagar = models.FloatField(null=False, default=0)
     producto = models.ForeignKey('Producto', blank=False, null=False, on_delete=models.DO_NOTHING)
     sprint_inicio = models.ForeignKey('Sprint', on_delete=models.DO_NOTHING, null=False, related_name="sprint_inicio")
     sprint_fin = models.ForeignKey('Sprint', on_delete=models.DO_NOTHING, null=True, related_name="sprint_fin",
                                    blank=True)
-    reasignada = models.BooleanField(null=False, default=False)
+    reasignada = models.BooleanField(null=True, default=False)
     fecha_produccion = models.DateField(null=True, blank=True)
-    estado = models.CharField(choices=ESTADO_CHOICES, max_length=2, null=False)
 
     def __str__(self):
         return self.codigo
@@ -116,13 +134,23 @@ class Asignacion(models.Model):
     contratacion = models.ForeignKey('Contratacion', on_delete=models.DO_NOTHING, null=False, blank=False)
     clasificacion = models.CharField(choices=CLASIFICACION_CHOICES, max_length=3, null=False, blank=False)
     facturacion = models.BooleanField(null=False, default=False)
-    horas_facturadas = models.FloatField(null=False)
-    monto_facturado = models.FloatField(null=False)
 
 
-# cambiar
-class Facturacion(models.Model):
+
+
+class Factura(models.Model):
+    numero = models.CharField(max_length=25, null=False)
+    fecha = models.DateField(null=False, blank=False)
+    monto = models.FloatField(null=False)
+    contratacion = models.ForeignKey('Contratacion', on_delete=models.DO_NOTHING, null=False, blank=False)
+
+
+
+class Detalle_factura(models.Model):
     asignacion = models.ForeignKey('Asignacion', on_delete=models.DO_NOTHING, null=False, blank=False)
+    horas_facturadas = models.FloatField(null=True, default=0)
+    monto_facturado = models.FloatField(null=False)
+    factura = models.ForeignKey('Factura', on_delete=models.DO_NOTHING, null=False, blank=False)
 
 
 class Sprint(models.Model):
@@ -153,8 +181,8 @@ class Planificacion(models.Model):
         ('8', 'Por pagar'),
         ('9', 'En espera'),
     )
-    estado_inicio = models.CharField(choices=ESTADO_CHOICES, max_length=2, null=False)
-    estado_fin = models.CharField(choices=ESTADO_CHOICES, max_length=2, null=False, blank=True)
+    estado_inicio = models.CharField(choices=ESTADO_CHOICES, max_length=2, null=False, blank=False)
+    estado_fin = models.CharField(choices=ESTADO_CHOICES, max_length=2, null=True, blank=True)
     sprint = models.ForeignKey('Sprint', on_delete=models.DO_NOTHING, null=False, blank=False)
     incidencia = models.ForeignKey('Incidencia', on_delete=models.DO_NOTHING, null=False, blank=False)
     fecha_asignada = models.DateField(null=False, blank=False, auto_now_add=True)
