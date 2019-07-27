@@ -14,9 +14,9 @@ class Contratista(models.Model):
 
 
 class Proyecto(models.Model):
+    codigo = models.CharField(max_length=32, null=False, blank=False)
     nombre = models.CharField(max_length=256, null=False, blank=False)
     descripcion = models.CharField(max_length=512, null=False)
-    codigo = models.CharField(max_length=32, null=False, blank=False)
 
     def __str__(self):
         return "" + self.codigo + "-" + self.nombre
@@ -72,7 +72,6 @@ class Producto(models.Model):
     padre = models.ForeignKey('self', on_delete=models.DO_NOTHING, null=True, blank=True)
 
 
-
 class Bitacora_producto(models.Model):
     observacion = models.CharField(max_length=1024, null=False, blank=False)
     fecha = models.DateTimeField(auto_now_add=True, blank=True)
@@ -121,16 +120,11 @@ class Incidencia(models.Model):
         return self.codigo
 
 
-
-
-
-
 class Factura(models.Model):
     numero = models.CharField(max_length=25, null=False)
     fecha = models.DateField(null=False, blank=False)
     monto = models.FloatField(null=False)
     contratacion = models.ForeignKey('Contratacion', on_delete=models.DO_NOTHING, null=False, blank=False)
-
 
 
 class Detalle_factura(models.Model):
@@ -153,7 +147,6 @@ class Sprint(models.Model):
     class Meta:
         ordering = ["numero", "proyecto"]
         unique_together = ('numero', 'proyecto')
-
 
 
 class Planificacion(models.Model):

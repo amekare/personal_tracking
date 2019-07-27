@@ -1,5 +1,5 @@
 from django.contrib import admin
-from tracking.models import Incidencia, Sprint, Contratista, Planificacion, Producto, Observacion, Contratacion
+from tracking.models import Incidencia, Sprint, Contratista, Planificacion, Producto, Observacion, Contratacion, Proyecto
 
 
 class ContratistaAdmin(admin.ModelAdmin):
@@ -47,6 +47,12 @@ class ContratacionAdmin(admin.ModelAdmin):
     ordering = ("contratista", "proyecto")
 
 
+class ProyectoAdmin(admin.ModelAdmin):
+    list_display = ('codigo', 'nombre')
+    search_fields = ('codigo', 'nombre')
+    ordering = ('codigo', 'nombre')
+
+
 admin.site.register(Incidencia, IncidenciaAdmin)
 admin.site.register(Sprint, SprintAdmin)
 admin.site.register(Contratista, ContratistaAdmin)
@@ -54,3 +60,4 @@ admin.site.register(Planificacion, PlanificacionAdmin)
 admin.site.register(Producto, ProductoAdmin)
 admin.site.register(Observacion, ObservacionAdmin)
 admin.site.register(Contratacion, ContratacionAdmin)
+admin.site.register(Proyecto, ProyectoAdmin)
