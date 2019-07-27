@@ -116,24 +116,11 @@ class Incidencia(models.Model):
     sprint_fin = models.ForeignKey('Sprint', on_delete=models.DO_NOTHING, null=True, related_name="sprint_fin",
                                    blank=True)
     reasignada = models.BooleanField(null=True, default=False)
-    fecha_produccion = models.DateField(null=True, blank=True)
 
     def __str__(self):
         return self.codigo
 
 
-class Asignacion(models.Model):
-    CLASIFICACION_CHOICES = (
-        ('1', 'Sin pagar'),
-        ('2', 'Por pagar'),
-        ('3', 'Pagada'),
-        ('4', 'Desarrollo CI'),
-        ('5', 'Garantía'),
-    )
-    planificacion = models.ForeignKey('Planificacion', on_delete=models.DO_NOTHING, null=False, blank=False)
-    contratacion = models.ForeignKey('Contratacion', on_delete=models.DO_NOTHING, null=False, blank=False)
-    clasificacion = models.CharField(choices=CLASIFICACION_CHOICES, max_length=3, null=False, blank=False)
-    facturacion = models.BooleanField(null=False, default=False)
 
 
 
@@ -147,7 +134,7 @@ class Factura(models.Model):
 
 
 class Detalle_factura(models.Model):
-    asignacion = models.ForeignKey('Asignacion', on_delete=models.DO_NOTHING, null=False, blank=False)
+    planificacion = models.ForeignKey('Planificacion', on_delete=models.DO_NOTHING, null=False, blank=False)
     horas_facturadas = models.FloatField(null=True, default=0)
     monto_facturado = models.FloatField(null=False)
     factura = models.ForeignKey('Factura', on_delete=models.DO_NOTHING, null=False, blank=False)
@@ -181,11 +168,21 @@ class Planificacion(models.Model):
         ('8', 'Por pagar'),
         ('9', 'En espera'),
     )
+    CLASIFICACION_CHOICES = (
+        ('1', 'Sin pagar'),
+        ('2', 'Por pagar'),
+        ('3', 'Pagada'),
+        ('4', 'Desarrollo CI'),
+        ('5', 'Garantía'),
+    )
     estado_inicio = models.CharField(choices=ESTADO_CHOICES, max_length=2, null=False, blank=False)
     estado_fin = models.CharField(choices=ESTADO_CHOICES, max_length=2, null=True, blank=True)
     sprint = models.ForeignKey('Sprint', on_delete=models.DO_NOTHING, null=False, blank=False)
     incidencia = models.ForeignKey('Incidencia', on_delete=models.DO_NOTHING, null=False, blank=False)
     fecha_asignada = models.DateField(null=False, blank=False, auto_now_add=True)
+    contratacion = models.ForeignKey('Contratacion', on_delete=models.DO_NOTHING, null=False, blank=False)
+    clasificacion = models.CharField(choices=CLASIFICACION_CHOICES, max_length=3, null=False, blank=False, default='1')
+    facturacion = models.BooleanField(null=False, default=False)
 
     def __str__(self):
         return self.sprint.__str__() + "(" + self.fecha.__str__() + ") -" + self.incidencia.codigo
