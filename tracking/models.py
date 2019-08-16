@@ -9,6 +9,10 @@ class Contratista(models.Model):
     identificacion = models.CharField(max_length=128)
     email = models.CharField(max_length=128)
 
+    class Meta:
+        verbose_name = 'Contratista'
+        verbose_name_plural = 'Contratistas'
+
     def __str__(self):
         return self.nombre + " " + self.apellido1 + " " + self.apellido2
 
@@ -17,6 +21,10 @@ class Proyecto(models.Model):
     codigo = models.CharField(max_length=32, null=False, blank=False)
     nombre = models.CharField(max_length=256, null=False, blank=False)
     descripcion = models.CharField(max_length=512, null=False)
+
+    class Meta:
+        verbose_name = 'Proyecto'
+        verbose_name_plural = 'Proyectos'
 
     def __str__(self):
         return "" + self.codigo + "-" + self.nombre
@@ -48,8 +56,15 @@ class Contratacion(models.Model):
     fecha_inicio = models.DateField(null=False, blank=False)
     fecha_fin = models.DateField(null=True, blank=True)
 
+    class Meta:
+        verbose_name = 'Contratación'
+        verbose_name_plural = 'Contrataciones'
 
-class Bitacora_contratacion(models.Model):
+    def __str__(self):
+        return self.orden_compra + " - " + str(self.contratista)
+
+
+class BitacoraContratacion(models.Model):
     observacion = models.CharField(max_length=1024, null=False, blank=False)
     fecha = models.DateTimeField(auto_now_add=True, blank=True)
     contratacion = models.ForeignKey('Contratacion', null=False, blank=False, on_delete=models.DO_NOTHING)
@@ -65,14 +80,21 @@ class Producto(models.Model):
     numero = models.FloatField(blank=False, null=False)
     descripcion = models.CharField(max_length=1024, null=False, blank=False)
     horas_estimadas = models.FloatField(null=False)
-    horas_utilizadas = models.FloatField(null=False)
+    horas_utilizadas = models.FloatField(null=False, default=0)
     contratacion = models.ForeignKey('Contratacion', null=False, blank=False, on_delete=models.DO_NOTHING)
     modificado = models.BooleanField(null=False, default=False)
     pagado = models.BooleanField(null=False, default=False)
     padre = models.ForeignKey('self', on_delete=models.DO_NOTHING, null=True, blank=True)
 
+    class Meta:
+        verbose_name = 'Producto'
+        verbose_name_plural = 'Productos'
 
-class Bitacora_producto(models.Model):
+    def __str__(self):
+        return self.contratacion.contrato + " " + str(self.numero) + ": " + self.descripcion
+
+
+class BitacoraProducto(models.Model):
     observacion = models.CharField(max_length=1024, null=False, blank=False)
     fecha = models.DateTimeField(auto_now_add=True, blank=True)
     producto = models.ForeignKey('Producto', null=False, blank=False, on_delete=models.DO_NOTHING)
@@ -116,6 +138,10 @@ class Incidencia(models.Model):
                                    blank=True)
     reasignada = models.BooleanField(null=True, default=False)
 
+    class Meta:
+        verbose_name = 'Incidencia'
+        verbose_name_plural = 'Incidencias'
+
     def __str__(self):
         return self.codigo
 
@@ -126,13 +152,26 @@ class Factura(models.Model):
     monto = models.FloatField(null=False)
     contratacion = models.ForeignKey('Contratacion', on_delete=models.DO_NOTHING, null=False, blank=False)
 
+    class Meta:
+        verbose_name = 'Factura'
+        verbose_name_plural = 'Facturas'
 
-class Detalle_factura(models.Model):
+    def __str__(self):
+        return self.numero + " - " + self.contratacion
+
+
+class DetalleFactura(models.Model):
     planificacion = models.ForeignKey('Planificacion', on_delete=models.DO_NOTHING, null=False, blank=False)
     horas_facturadas = models.FloatField(null=True, default=0)
     monto_facturado = models.FloatField(null=False)
     factura = models.ForeignKey('Factura', on_delete=models.DO_NOTHING, null=False, blank=False)
 
+    class Meta:
+        verbose_name = 'Detalle de factura'
+        verbose_name_plural = 'Detalles de factura'
+
+    def __str__(self):
+        return self.factura + " " + self.planificacion
 
 class Sprint(models.Model):
     fecha_inicio = models.DateField(null=False, blank=False)
@@ -141,12 +180,16 @@ class Sprint(models.Model):
     numero = models.IntegerField(null=False, blank=False)
     proyecto = models.ForeignKey('Proyecto', null=False, on_delete=models.DO_NOTHING)
 
-    def __str__(self):
-        return "Sprint " + self.numero.__str__() + "-" + self.proyecto
-
     class Meta:
         ordering = ["numero", "proyecto"]
         unique_together = ('numero', 'proyecto')
+        verbose_name = 'Sprint'
+        verbose_name_plural = 'Sprints'
+
+    def __str__(self):
+        return "Sprint " + self.numero.__str__() + "-" + self.proyecto
+
+
 
 
 class Planificacion(models.Model):
@@ -177,6 +220,11 @@ class Planificacion(models.Model):
     clasificacion = models.CharField(choices=CLASIFICACION_CHOICES, max_length=3, null=False, blank=False, default='1')
     facturacion = models.BooleanField(null=False, default=False)
 
+    class Meta:
+        ordering = ["sprint", "fecha_asignada"]
+        verbose_name = "Planificación"
+        verbose_name_plural = "Planificaciones"
+
     def __str__(self):
         return self.sprint.__str__() + "(" + self.fecha.__str__() + ") -" + self.incidencia.codigo
 
@@ -194,8 +242,7 @@ class Planificacion(models.Model):
     def get_sprint(self, obj):
         return obj.sprint
 
-    class Meta:
-        ordering = ["sprint", "fecha_asignada"]
+
 
 
 class Observacion(models.Model):
@@ -203,8 +250,11 @@ class Observacion(models.Model):
     descripcion = models.CharField(max_length=512)
     planificacion = models.ForeignKey('Planificacion', on_delete=models.DO_NOTHING, null=False)
 
+    class Meta:
+        ordering = ["fecha"]
+        verbose_name = "Observación"
+        verbose_name_plural = "Observaciones"
+
     def __str__(self):
         return self.fecha.__str__() + " " + self.planificacion.__str__()
 
-    class Meta:
-        ordering = ["fecha"]
