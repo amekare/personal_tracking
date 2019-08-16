@@ -173,6 +173,7 @@ class DetalleFactura(models.Model):
     def __str__(self):
         return self.factura + " " + self.planificacion
 
+
 class Sprint(models.Model):
     fecha_inicio = models.DateField(null=False, blank=False)
     fecha_fin = models.DateField(null=False, blank=False)
@@ -187,9 +188,10 @@ class Sprint(models.Model):
         verbose_name_plural = 'Sprints'
 
     def __str__(self):
-        return "Sprint " + self.numero.__str__() + "-" + self.proyecto
+        return "Sprint " + self.numero.__str__()
 
-
+    def nombreCompleto(self):
+        return "Sprint " + self.numero.__str__() + self.proyecto
 
 
 class Planificacion(models.Model):
@@ -243,8 +245,6 @@ class Planificacion(models.Model):
         return obj.sprint
 
 
-
-
 class Observacion(models.Model):
     fecha = models.DateField(null=False, blank=False, auto_now_add=True)
     descripcion = models.CharField(max_length=512)
@@ -257,4 +257,3 @@ class Observacion(models.Model):
 
     def __str__(self):
         return self.fecha.__str__() + " " + self.planificacion.__str__()
-

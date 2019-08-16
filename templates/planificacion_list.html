@@ -18,7 +18,7 @@
                     <td><a href="{% url 'planificacion-detail' pk=sprint.pk %}">{{ sprint.numero }}</a>
                     </td>
                     <td>
-                        <a href="#k %}">   {{ sprint.proyecto }}</a>
+                        <a href="{% url 'proyecto-detail' pk=sprint.proyecto.pk %}">   {{ sprint.proyecto }}</a>
                     </td>
                     <td>{{ sprint.fecha_inicio }}</td>
                     <td>

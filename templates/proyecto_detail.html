@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block title %}Proyecto {{ proyecto.codigo }}{% endblock %}
+{% block content %}
+    <a type="button" class="btn btn-primary" href="{% url 'proyecto-list' %}">Volver</a>
+    <hr>
+
+
+    <div class="card">
+
+        <div class="card-header">
+            <b>Proyecto:</b> {{ proyecto.codigo }}
+        </div>
+        <div class="card-body">
+            <p><b>Nombre: </b>{{ proyecto.nombre }} </p>
+            <p><b>Descripción: </b>{{ proyecto.descripcion }} </p>
+        </div>
+    </div>
+    <hr>
+    <div class="container">
+        <table class="table table-bordered text-center">
+            <thead class="thead-dark">
+            <th>Proyecto</th>
+            <th>Contrato</th>
+            <th>Contratista</th>
+            <th>Orden de compra</th>
+            <th>Fecha de inicio</th>
+            <th>Fecha de fin</th>
+
+
+            </thead>
+
+            {% for contratacion in contrataciones %}
+                <tr>
+                    <td>
+                        <a href="{% url 'proyecto-detail' pk=contratacion.proyecto.pk %}"> {{ contratacion.proyecto }}</a>
+                    </td>
+                    <td>
+                        <a href="{% url 'sprint-detail' pk=contratacion.pk %}"> {{ contratacion.contrato }}</a>
+                    </td>
+                    <td>
+                        <a href="{% url 'sprint-detail' pk=contratacion.pk %}"> {{ contratacion.contratista }}</a>
+                    </td>
+                <td>
+                    {{ contratacion.orden_compra }}
+                </td>
+                    <td>
+                    {{ contratacion.fecha_inicio }}
+                </td>
+                <td>
+                    {% if contratacion.fecha_fin %}
+                        <td>{{ contratacion.fecha_fin }}</td>
+                    {% else %}
+                    ---
+                    {% endif %}
+                </td>
+
+                </tr>
+            {% endfor %}
+
+        </table>
+
+
+    </div>
+
+    <hr>
+    <a type="button" class="btn btn-danger " href="{% url 'proyecto-detail' proyecto.pk %}">Borrar</a>
+
+    <a type="button" class="btn btn-success" href="{% url 'proyecto-detail' proyecto.pk %}">Editar</a>
+{% endblock %}
+
+

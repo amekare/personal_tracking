@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from .models import Incidencia, Sprint, Planificacion, Observacion
+from tracking.models import *
 from datetime import date
 
 
@@ -50,3 +50,16 @@ def planificacion_detail(request, pk):
     planificaciones = Planificacion.objects.filter(sprint__pk=sprint.pk)
     return render(request, 'planificacion_detail.html',
                   {'sprint': sprint, 'planificaciones': planificaciones})
+
+
+# Proyectos
+
+def proyecto_list(request):
+    proyectos = Proyecto.objects.order_by('codigo')
+    return render(request, 'proyecto_list.html', {'proyectos': proyectos})
+
+
+def proyecto_detail(request, pk):
+    proyecto = get_object_or_404(Proyecto, pk=pk)
+    contrataciones = Contratacion.objects.filter(proyecto__pk=proyecto.pk)
+    return render(request, 'proyecto_detail.html', {'proyecto': proyecto, 'contrataciones': contrataciones})

@@ -3,7 +3,7 @@ from tracking.models import Incidencia, Sprint, Contratista, Planificacion, Prod
 
 
 class ContratistaAdmin(admin.ModelAdmin):
-    list_display = ('identificacion', 'nombre', 'apellido1', 'apellido2')
+    list_display = ('identificacion', 'nombre', 'apellido1', 'apellido2','email')
     search_fields = ('nombre', 'apellido1', 'apellido2')
     ordering = ('nombre',)
 
@@ -19,12 +19,14 @@ class SprintAdmin(admin.ModelAdmin):
     list_display = ('numero', 'proyecto', 'fecha_inicio', 'fecha_fin')
     search_fields = ('numero', 'proyecto')
     ordering = ('numero', 'proyecto')
+    list_filter = ("proyecto__nombre",)
 
 
 class ProductoAdmin(admin.ModelAdmin):
     list_display = ('numero', 'descripcion', 'horas_estimadas', 'horas_utilizadas')
     search_fields = ('numero', 'descripcion')
     ordering = ("numero",)
+    list_filter = ("contratacion__contrato","contratacion__proyecto__nombre")
 
 
 class PlanificacionAdmin(admin.ModelAdmin):
@@ -43,8 +45,9 @@ class ObservacionAdmin(admin.ModelAdmin):
 
 class ContratacionAdmin(admin.ModelAdmin):
     list_display = ('contratista', 'tipo', 'rol', 'proyecto', 'orden_compra',)
-    search_fields = ('proyecto__codigo', 'proyecto__nombre', 'contratista__nombre')
+    search_fields = ('proyecto__codigo', 'proyecto__nombre', 'contratista__nombre', 'contratista__apellido1')
     ordering = ("contratista", "proyecto")
+    list_filter = ("tipo","proyecto__nombre","rol")
 
 
 class ProyectoAdmin(admin.ModelAdmin):
