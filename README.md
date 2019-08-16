@@ -1,6 +1,6 @@
 # personal_tracking
 
-Control de incidencias en jira y pagos
+Control de incidencias y pagos
 
 ### en el OS
 
