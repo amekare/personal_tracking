@@ -27,7 +27,7 @@ class Proyecto(models.Model):
         verbose_name_plural = 'Proyectos'
 
     def __str__(self):
-        return "" + self.codigo + "-" + self.nombre
+        return "" + self.codigo + ": " + self.nombre
 
 
 class Contratacion(models.Model):
@@ -51,8 +51,9 @@ class Contratacion(models.Model):
     orden_compra = models.CharField(max_length=128, null=True, blank=True)
     horas_contratadas = models.FloatField(null=True)
     horas_consumidas = models.FloatField(null=False, default=0)
-    presupuesto_adjudicado = models.FloatField(null=True)
-    presupuesto_consumido = models.FloatField(null=True)
+    # presupuesto puede ser null porque si son internos no se tiene presupuesto asignado
+    presupuesto_adjudicado = models.DecimalField(null=True, max_digits=15, decimal_places=2)
+    presupuesto_consumido = models.DecimalField(null=True, max_digits=15, decimal_places=2)
     fecha_inicio = models.DateField(null=False, blank=False)
     fecha_fin = models.DateField(null=True, blank=True)
 
@@ -62,6 +63,12 @@ class Contratacion(models.Model):
 
     def __str__(self):
         return self.orden_compra + " - " + str(self.contratista)
+
+    def get_presupuesto_adjudicado(self):
+        return "₡ {:,.2f}".format(self.presupuesto_adjudicado)
+
+    def get_presupuesto_consumido(self):
+        return "₡ {:,.2f}".format(self.presupuesto_consumido)
 
 
 class BitacoraContratacion(models.Model):

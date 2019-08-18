@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container">
+        <h1 class="h1">Contrataciones</h1>
+        <table class="table table-bordered text-center ">
+            <thead class="table-dark">
+            <tr>
+                <th>Proyecto</th>
+                <th>Contrato</th>
+                <th>Contratista</th>
+                <th>Orden de compra</th>
+                <th>Fecha de inicio</th>
+                <th>Fecha de fin</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for contratacion in contrataciones %}
+                <tr>
+                    <td>
+                        <a href="{% url 'proyecto-detail' pk=contratacion.proyecto.pk %}">{{ contratacion.proyecto }}</a>
+                    </td>
+                    <td>
+                        <a href="{% url 'contratacion-detail' contratacion.pk %}">{{ contratacion.contrato }}</a>
+                    </td>
+                    <td>
+                        <a href="{% url 'contratacion-detail' contratacion.contratista.pk %}">{{ contratacion.contratista }}</a>
+                    </td>
+                    <td>
+                        {{ contratacion.orden_compra }}
+                    </td>
+                    <td>
+                        {{ contratacion.fecha_inicio }}
+                    </td>
+                    <td>
+                        {% if contratacion.fecha_fin %}
+                            <td>{{ contratacion.fecha_fin }}</td>
+                        {% else %}
+                            ---
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+{% endblock %}

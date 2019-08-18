@@ -2,38 +2,35 @@
 
 {% block content %}
     <div class="container">
-        <h1 class="h1">Planificaciones</h1>
+        <h1 class="h1">Planificaciones {{ proyecto }}</h1>
         <table class="table table-bordered text-center ">
             <thead class="table-dark">
             <tr>
                 <th>Sprint</th>
-                <th>Proyecto</th>
                 <th>Fecha de inicio</th>
                 <th>Fecha de fin</th>
+                <th>Fecha de revisión</th>
             </tr>
             </thead>
             <tbody>
-            {% for sprint in sprints %}
+            {% for planificacion in planificaciones %}
                 <tr>
-                    <td><a href="{% url 'planificacion-detail' pk=sprint.pk %}">{{ sprint.numero }}</a>
+                    <td>
+                        {{ planificacion.sprint.numero }}
                     </td>
                     <td>
-                        <a href="{% url 'proyecto-detail' pk=sprint.proyecto.pk %}">   {{ sprint.proyecto }}</a>
+                        {{ planificacion.sprint.fecha_inicio }}
                     </td>
-                    <td>{{ sprint.fecha_inicio }}</td>
                     <td>
-                        {{ sprint.fecha_fin }}
+                        {{ planificacion.sprint.fecha_fin }}
                     </td>
-
+                    <td>
+                        {{ planificacion.sprint.fecha_revision }}
+                    </td>
                 </tr>
-
             {% endfor %}
             </tbody>
-
-
         </table>
-
     </div>
-
 
 {% endblock %}

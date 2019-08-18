@@ -4,10 +4,7 @@
 {% block content %}
     <a type="button" class="btn btn-primary" href="{% url 'planificacion-list' %}">Volver</a>
     <hr>
-
-
     <div class="card">
-
         <div class="card-header">
             <b>Planificación:</b> Sprint {{ sprint.numero }}
             <br>
@@ -17,8 +14,6 @@
             <br>
             <b>Revisión:</b> {{ sprint.fecha_revision }}
         </div>
-
-
     </div>
     <hr>
     <div class="container">
@@ -33,7 +28,6 @@
             <th>Fecha asignada</th>
             <th>Observaciones</th>
             </thead>
-
             {% for plani in planificaciones %}
                 <tr>
                     <td>
@@ -65,10 +59,7 @@
                     {% endif %}
                 </tr>
             {% endfor %}
-
         </table>
-
-
     </div>
     <hr>
 

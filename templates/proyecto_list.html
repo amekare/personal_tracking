@@ -9,6 +9,7 @@
                 <th>Código</th>
                 <th>Nombre</th>
                 <th>Descripción</th>
+                <th></th>
             </tr>
             </thead>
             <tbody>
@@ -16,18 +17,12 @@
                 <tr>
                     <td><a href="{% url 'proyecto-detail' pk=proyecto.pk %}"> {{ proyecto.codigo }}</a></td>
                     <td>{{ proyecto.nombre }}</td>
-                    <td>{{ proyecto.descripcion  }}</td>
-
-
+                    <td>{{ proyecto.descripcion }}</td>
+                    <td><a href="{% url 'planificacion-list' pk=proyecto.pk %}"> Planificaciones</a></td>
                 </tr>
-
             {% endfor %}
             </tbody>
-
-
         </table>
-
     </div>
-
 
 {% endblock %}

@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %} Contratacion {{ contratacion.contrato }}{% endblock %}
+{% block content %}
+    <a type="button" class="btn btn-primary" href="{% url 'contratacion-list' %}">Volver</a>
+    <hr>
+    <div class="card">
+        <div class="card-header">
+            <b>Contratación</b>
+        </div>
+        <div class="card-body">
+            <b>Proyecto:</b> <a
+                href="{% url 'proyecto-detail' pk=contratacion.proyecto.pk %}">{{ contratacion.proyecto }} </a>
+            <br>
+            <b>Contrato:</b> {{ contratacion.contrato }}
+            <br>
+            <b>Orden de compra:</b> {{ contratacion.orden_compra }}
+            <br>
+            <b>Contratista:</b> <a
+                href="{% url 'sprint-detail' pk=contratacion.contratista.pk %}"> {{ contratacion.contratista }}</a>
+            <br>
+            <b>Tipo:</b> {{ contratacion.get_tipo_display }}
+            <br>
+            <b>Rol:</b> {{ contratacion.get_rol_display }}
+            <br>
+            <b>Fecha de inicio:</b> {{ contratacion.fecha_inicio }}
+            <br>
+            <b>Fecha de fin:</b> {{ contratacion.fecha_fin }}
+            <br>
+            <b>Horas contratadas:</b> {{ contratacion.horas_contratadas }}
+            <br>
+            <b>Horas consumidas:</b> {{ contratacion.horas_consumidas }}
+            <br>
+            <b>Presupuesto adjudicado:</b> {{ contratacion.get_presupuesto_adjudicado }}
+            <br>
+            <b>Presupuesto consumido:</b> {{ contratacion.get_presupuesto_consumido }}
+
+        </div>
+    </div>
+    <hr>
+
+{% endblock %}

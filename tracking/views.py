@@ -40,9 +40,10 @@ def sprint_detail(request, pk):
 
 
 # Planificacion
-def planificacion_list(request):
-    sprints = Sprint.objects.order_by('numero')
-    return render(request, 'planificacion_list.html', {'sprints': sprints})
+def planificacion_proyecto(request, pk):
+    proyecto = get_object_or_404(Proyecto, pk=pk)
+    planificaciones = Planificacion.objects.filter(contratacion__proyecto__pk=proyecto.pk)
+    return render(request, 'planificacion_list.html', {'planificaciones': planificaciones, 'proyecto':proyecto})
 
 
 def planificacion_detail(request, pk):
@@ -63,3 +64,15 @@ def proyecto_detail(request, pk):
     proyecto = get_object_or_404(Proyecto, pk=pk)
     contrataciones = Contratacion.objects.filter(proyecto__pk=proyecto.pk)
     return render(request, 'proyecto_detail.html', {'proyecto': proyecto, 'contrataciones': contrataciones})
+
+
+# Contratacion
+
+def contratacion_list(request):
+    contrataciones = Contratacion.objects.order_by('proyecto__codigo')
+    return render(request, 'contratacion_list.html', {'contrataciones': contrataciones})
+
+
+def contratacion_detail(request, pk):
+    contratacion = get_object_or_404(Contratacion, pk=pk)
+    return render(request, 'contratacion_detail.html', {'contratacion': contratacion})
