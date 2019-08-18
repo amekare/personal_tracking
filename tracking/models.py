@@ -17,6 +17,7 @@ class Contratista(models.Model):
         return self.nombre + " " + self.apellido1 + " " + self.apellido2
 
 
+
 class Proyecto(models.Model):
     codigo = models.CharField(max_length=32, null=False, blank=False)
     nombre = models.CharField(max_length=256, null=False, blank=False)
@@ -235,7 +236,7 @@ class Planificacion(models.Model):
         verbose_name_plural = "Planificaciones"
 
     def __str__(self):
-        return self.sprint.__str__() + "(" + self.fecha.__str__() + ") -" + self.incidencia.codigo
+        return self.sprint.__str__() + "(" + self.fecha_asignada.__str__() + ") -" + self.incidencia.codigo
 
     def save(self, *args, **kwargs):
         if not self.estado_inicio:

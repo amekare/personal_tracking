@@ -2,40 +2,90 @@
 
 {% block title %} Contratacion {{ contratacion.contrato }}{% endblock %}
 {% block content %}
-    <a type="button" class="btn btn-primary" href="{% url 'contratacion-list' %}">Volver</a>
+    <a type="button" class="btn btn-primary" href="{{request.META.HTTP_REFERER}}">Volver</a>
     <hr>
     <div class="card">
         <div class="card-header">
-            <b>Contratación</b>
+            <b>Contratación {{ contratacion.orden_compra }}</b>
         </div>
         <div class="card-body">
-            <b>Proyecto:</b> <a
-                href="{% url 'proyecto-detail' pk=contratacion.proyecto.pk %}">{{ contratacion.proyecto }} </a>
-            <br>
-            <b>Contrato:</b> {{ contratacion.contrato }}
-            <br>
-            <b>Orden de compra:</b> {{ contratacion.orden_compra }}
-            <br>
-            <b>Contratista:</b> <a
-                href="{% url 'sprint-detail' pk=contratacion.contratista.pk %}"> {{ contratacion.contratista }}</a>
-            <br>
-            <b>Tipo:</b> {{ contratacion.get_tipo_display }}
-            <br>
-            <b>Rol:</b> {{ contratacion.get_rol_display }}
-            <br>
-            <b>Fecha de inicio:</b> {{ contratacion.fecha_inicio }}
-            <br>
-            <b>Fecha de fin:</b> {{ contratacion.fecha_fin }}
-            <br>
-            <b>Horas contratadas:</b> {{ contratacion.horas_contratadas }}
-            <br>
-            <b>Horas consumidas:</b> {{ contratacion.horas_consumidas }}
-            <br>
-            <b>Presupuesto adjudicado:</b> {{ contratacion.get_presupuesto_adjudicado }}
-            <br>
-            <b>Presupuesto consumido:</b> {{ contratacion.get_presupuesto_consumido }}
+            <div class="container-fluid">
+                <div class="row no-gutters">
+                    <div class="col-6">
+                        <b>Proyecto:</b> <a
+                            href="{% url 'proyecto-detail' pk=contratacion.proyecto.pk %}">{{ contratacion.proyecto }} </a>
+                        <br>
+                        <b>Contrato:</b> {{ contratacion.contrato }}
+                        <br>
+                        <b>Orden de compra:</b> {{ contratacion.orden_compra }}
+                        <br>
+                        <b>Contratista:</b> <a
+                            href="{% url 'contratista-detail' pk=contratacion.contratista.pk %}"> {{ contratacion.contratista }}</a>
+                        <br>
+                        <b>Tipo:</b> {{ contratacion.get_tipo_display }}
+                        <br>
+                        <b>Rol:</b> {{ contratacion.get_rol_display }}
+                    </div>
+                    <div class="col-6">
+                        <b>Fecha de inicio:</b> {{ contratacion.fecha_inicio }}
+                        <br>
+                        <b>Fecha de fin:</b>
+                        {% if contratacion.fecha_fin %}
+                            {{ contratacion.fecha_fin }}
+                        {% else %}
+                            - - -
+                        {% endif %}
+                        <br>
+                        <b>Horas contratadas:</b> {{ contratacion.horas_contratadas }}
+                        <br>
+                        <b>Horas consumidas:</b> {{ contratacion.horas_consumidas }}
+                        <br>
+                        <b>Presupuesto adjudicado:</b> {{ contratacion.get_presupuesto_adjudicado }}
+                        <br>
+                        <b>Presupuesto consumido:</b> {{ contratacion.get_presupuesto_consumido }}
+
+                    </div>
+                </div>
+            </div>
+
 
         </div>
+    </div>
+    <hr>
+    <div class="container">
+        <h2>Productos</h2>
+        <table class="table table-bordered text-center">
+            <thead class="thead-dark">
+            <th>Número</th>
+            <th>Descripción</th>
+            <th>Horas estimadas</th>
+            <th>Horas trabajadas</th>
+            <th>Pagada</th>
+            </thead>
+            {% for producto in productos %}
+                <tr>
+                    <td>
+                        <a href="{% url 'contratacion-detail' pk=contratacion.pk %}"> {{ producto.numero }}</a>
+                    </td>
+                    <td>
+                        {{ producto.descripcion }}
+                    </td>
+                    <td>
+                        {{ producto.horas_estimadas }}
+                    </td>
+                    <td>
+                        {{ producto.horas_utilizadas }}
+                    </td>
+                    <td>
+                        {% if producto.pagado %}
+                            <td> Si</td>
+                        {% else %}
+                            No
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
     </div>
     <hr>
 

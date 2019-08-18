@@ -1,16 +1,18 @@
 {% extends 'base.html' %}
 
-{% block title %}Proyecto {{ proyecto.codigo }}{% endblock %}
+{% block title %} Contratista {{ contratista }}{% endblock %}
 {% block content %}
     <a type="button" class="btn btn-primary" href="{{request.META.HTTP_REFERER}}">Volver</a>
     <hr>
     <div class="card">
         <div class="card-header">
-            <b>Proyecto:</b> {{ proyecto.codigo }}
+            <b>Contratista {{ contratista }}</b>
         </div>
         <div class="card-body">
-            <p><b>Nombre: </b>{{ proyecto.nombre }} </p>
-            <p><b>Descripción: </b>{{ proyecto.descripcion }} </p>
+            <b>Identificación:</b> {{ contratista.identificacion }}
+            <br>
+            <b>Email:</b> {{ contratista.email }}
+
         </div>
     </div>
     <hr>
@@ -18,22 +20,22 @@
         <h2>Contrataciones</h2>
         <table class="table table-bordered text-center">
             <thead class="thead-dark">
-            <th>Contratación</th>
-            <th>Contratista</th>
+            <th>Proyecto</th>
             <th>Orden de compra</th>
             <th>Fecha de inicio</th>
             <th>Fecha de fin</th>
+            <th>Presupuesto adjudicado</th>
+            <th>Presupuesto consumido</th>
+            <th>Horas contratadas</th>
+            <th>Horas consumidas</th>
             </thead>
             {% for contratacion in contrataciones %}
                 <tr>
                     <td>
-                        <a href="{% url 'contratacion-detail' pk=contratacion.pk %}"> {{ contratacion.contrato }}</a>
+                        <a href="{% url 'proyecto-detail' pk=contratacion.pk %}"> {{ contratacion.proyecto }}</a>
                     </td>
                     <td>
-                        <a href="{% url 'contratista-detail' pk=contratacion.pk %}"> {{ contratacion.contratista }}</a>
-                    </td>
-                    <td>
-                        {{ contratacion.orden_compra }}
+                        <a href="{% url 'contratacion-detail' pk=contratacion.pk %}">{{ contratacion.orden_compra }}</a>
                     </td>
                     <td>
                         {{ contratacion.fecha_inicio }}
@@ -45,14 +47,22 @@
                             ---
                         {% endif %}
                     </td>
+                    <td>
+                        {{ contratacion.get_presupuesto_adjudicado }}
+                    </td>
+                    <td>
+                        {{ contratacion.get_presupuesto_consumido }}
+                    </td>
+                    <td>
+                        {{ contratacion.horas_contratadas }}
+                    </td>
+                    <td>
+                        {{ contratacion.horas_consumidas }}
+                    </td>
                 </tr>
             {% endfor %}
         </table>
     </div>
     <hr>
-    <a type="button" class="btn btn-danger " href="{% url 'proyecto-detail' proyecto.pk %}">Borrar</a>
-    <a type="button" class="btn btn-success" href="{% url 'proyecto-detail' proyecto.pk %}">Editar</a>
 
 {% endblock %}
-
-

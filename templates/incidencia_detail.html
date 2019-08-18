@@ -3,14 +3,12 @@
 
 {% block title %}Incidencia {{ incidencia.codigo }}{% endblock %}
 {% block content %}
-    <a type="button" class="btn btn-primary" href="{% url 'incidencia-list' %}">Volver</a>
+    <a type="button" class="btn btn-primary" href="{{ request.META.HTTP_REFERER }}">Volver</a>
     <hr>
     <div class="card">
 
         <div class="card-header">
-            <b>Incidencia:</b> {{ incidencia.codigo }} - {{ incidencia.get_tipo_display }}
-            <br>
-            {{ incidencia.descripcion }}
+            <b>Incidencia:</b> {{ incidencia.codigo }} - {{ incidencia.descripcion }}
         </div>
         <div class="card-body">
             <div class="container-fluid">
@@ -18,24 +16,24 @@
                     <div class="col-6 ">
                         <b>Estado: </b> {{ incidencia.get_estado_display }}
                         <br/>
-                        <b>Cartel: </b> {{ incidencia.cartel }}
+                        <b>Tipo:</b>{{ incidencia.get_tipo_display }}
+                        <br/>
+                        <b>Producto: </b> {{ incidencia.producto }}
                         <br/>
                         <b>Padre:</b>
                         {% if incidencia.padre is None %}
-                            ---
+                            - - -
                         {% else %}
                             <a href="{% url 'incidencia-detail' pk=incidencia.padre.pk %}"> {{ incidencia.padre }} </a>
                         {% endif %}
                         <br/>
-                        <b>Reasignada: </b> {{ incidencia.reasignada }}
-                        <br/>
-                        <b>Fecha en producción: </b>
-                        {% if incidencia.fecha_produccion is None %}
-                            ---
+                        <b>Reasignada: </b>
+                        {% if incidencia.reasignada %}
+                            Si
                         {% else %}
-                            {{ incidencia.fecha_produccion }}
-                            <br/>
+                            No
                         {% endif %}
+                        <br/>
                     </div>
                     <div class="col-6 ">
                         <b>Horas estimadas:</b> {{ incidencia.horas_estimadas }}

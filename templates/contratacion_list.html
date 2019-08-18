@@ -24,7 +24,7 @@
                         <a href="{% url 'contratacion-detail' contratacion.pk %}">{{ contratacion.contrato }}</a>
                     </td>
                     <td>
-                        <a href="{% url 'contratacion-detail' contratacion.contratista.pk %}">{{ contratacion.contratista }}</a>
+                        <a href="{% url 'contratista-detail' contratacion.contratista.pk %}">{{ contratacion.contratista }}</a>
                     </td>
                     <td>
                         {{ contratacion.orden_compra }}

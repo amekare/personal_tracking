@@ -1,8 +1,9 @@
 {% extends 'base.html' %}
 
-{% block title %}Planificación {{ planificacion.codigo }}{% endblock %}
+{% block title %}Planificación {{ sprint }}{% endblock %}
 {% block content %}
-    <a type="button" class="btn btn-primary" href="{% url 'planificacion-list' %}">Volver</a>
+    <a type="button" class="btn btn-primary" href="{{request.META.HTTP_REFERER}}">Volver</a>
+    <a type="button" class="btn btn-success" href="{% url 'proyecto-list' %}">Finalizar sprint</a>
     <hr>
     <div class="card">
         <div class="card-header">
@@ -41,10 +42,10 @@
                         <td>---</td>
                     {% endif %}
 
-                    <td>{{ plani.asignado }}</td>
+                    <td><a href="{% url 'contratista-detail' plani.contratacion.contratista.pk %}">{{ plani.contratacion.contratista }}</a></td>
                     <td>{{ plani.incidencia.horas_estimadas }}</td>
                     <td>{{ plani.incidencia.horas_trabajadas }}</td>
-                    <td>{{ plani.fecha | date:"d-M-Y" }}</td>
+                    <td>{{ plani.fecha_asignada | date:"d-M-Y" }}</td>
                     {% if plani.observacion_set.all %}
 
                         <td> {% for o in plani.observacion_set.all %}

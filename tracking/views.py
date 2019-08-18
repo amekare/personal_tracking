@@ -42,11 +42,14 @@ def sprint_detail(request, pk):
 # Planificacion
 def planificacion_proyecto(request, pk):
     proyecto = get_object_or_404(Proyecto, pk=pk)
-    planificaciones = Planificacion.objects.filter(contratacion__proyecto__pk=proyecto.pk)
-    return render(request, 'planificacion_list.html', {'planificaciones': planificaciones, 'proyecto':proyecto})
+    sprints = Sprint.objects.filter(proyecto__pk=proyecto.pk).order_by('-fecha_inicio')
+    return render(request, 'planificacion_list.html', {'sprints': sprints, 'proyecto': proyecto})
+    # planificaciones = Planificacion.objects.filter(contratacion__proyecto__pk=proyecto.pk).distinct().order_by(
+    #     '-sprint__fecha_inicio')
+    # return render(request, 'planificacion_list.html', {'planificaciones': planificaciones, 'proyecto': proyecto})
 
 
-def planificacion_detail(request, pk):
+def planificacion_sprint(request, pk):
     sprint = get_object_or_404(Sprint, pk=pk)
     planificaciones = Planificacion.objects.filter(sprint__pk=sprint.pk)
     return render(request, 'planificacion_detail.html',
@@ -75,4 +78,12 @@ def contratacion_list(request):
 
 def contratacion_detail(request, pk):
     contratacion = get_object_or_404(Contratacion, pk=pk)
-    return render(request, 'contratacion_detail.html', {'contratacion': contratacion})
+    productos = Producto.objects.filter(contratacion=contratacion)
+    return render(request, 'contratacion_detail.html',
+                  {'contratacion': contratacion, 'productos': productos})
+
+
+def contratista_detail(request, pk):
+    contratista = get_object_or_404(Contratista, pk=pk)
+    contrataciones = Contratacion.objects.filter(contratista=contratista)
+    return render(request, 'contratista_detail.html', {'contratista': contratista, 'contrataciones': contrataciones})
