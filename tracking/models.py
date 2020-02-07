@@ -17,7 +17,6 @@ class Contratista(models.Model):
         return self.nombre + " " + self.apellido1 + " " + self.apellido2
 
 
-
 class Proyecto(models.Model):
     codigo = models.CharField(max_length=32, null=False, blank=False)
     nombre = models.CharField(max_length=256, null=False, blank=False)
@@ -63,7 +62,10 @@ class Contratacion(models.Model):
         verbose_name_plural = 'Contrataciones'
 
     def __str__(self):
-        return self.orden_compra + " - " + str(self.contratista)
+        if self.orden_compra:
+            return str(self.proyecto) + "-" + self.orden_compra + " - " + str(self.contratista)
+        else:
+            return str(self.proyecto) + " - " + str(self.contratista)
 
     def get_presupuesto_adjudicado(self):
         return "₡ {:,.2f}".format(self.presupuesto_adjudicado)

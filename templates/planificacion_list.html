@@ -17,7 +17,7 @@
             {% for sprint in sprints %}
                 <tr>
                     <td>
-                        <a href="{% url 'planificacion-detail' pk=sprint.pk %}"> {{ sprint.numero }}</a>
+                        <a href="{% url 'planificacion-detail' pk=sprint.pk %}"> {{ sprint }}</a>
                     </td>
                     <td>
                         {{ sprint.fecha_inicio }}

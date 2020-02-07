@@ -66,7 +66,10 @@ def proyecto_list(request):
 def proyecto_detail(request, pk):
     proyecto = get_object_or_404(Proyecto, pk=pk)
     contrataciones = Contratacion.objects.filter(proyecto__pk=proyecto.pk)
-    return render(request, 'proyecto_detail.html', {'proyecto': proyecto, 'contrataciones': contrataciones})
+    #planificaciones = Planificacion.objects.filter(incidencia__producto__contratacion__proyecto__pk=pk)
+    sprints = Sprint.objects.filter(proyecto__pk = proyecto.pk)
+    return render(request, 'proyecto_detail.html', {'proyecto': proyecto, 'contrataciones': contrataciones,
+                                                    'sprints': sprints})
 
 
 # Contratacion

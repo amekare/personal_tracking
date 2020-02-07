@@ -49,6 +49,37 @@
             {% endfor %}
         </table>
     </div>
+    <div class="container">
+        <h2>Planificaciones</h2>
+        <table class="table table-bordered text-center">
+            <thead class="thead-dark">
+            <th>Número</th>
+            <th>Total incidencias</th>
+            <th>Fecha de inicio</th>
+            <th>Fecha de fin</th>
+            </thead>
+            {% for sprint in sprints %}
+                <tr>
+                    <td>
+                        <a href="{% url 'planificacion-detail' pk=sprint.pk %}"> {{ sprint }}</a>
+                    </td>
+                    <td>
+                        <a href="{% url 'contratista-detail' pk=sprint.pk %}"> {{ sprint }}</a>
+                    </td>
+                    <td>
+                        {{ sprint.fecha_inicio }}
+                    </td>
+                    <td>
+                        {% if sprint.fecha_fin %}
+                            {{ sprint.fecha_fin }}
+                        {% else %}
+                            ---
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
     <hr>
     <a type="button" class="btn btn-danger " href="{% url 'proyecto-detail' proyecto.pk %}">Borrar</a>
     <a type="button" class="btn btn-success" href="{% url 'proyecto-detail' proyecto.pk %}">Editar</a>

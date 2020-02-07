@@ -2,7 +2,7 @@
 
 {% block content %}
     <div class="container">
-        <h1 class="h1">Contrataciones</h1>
+        <h1 class="h1">Productos de contratación XXX</h1>
         <table class="table table-bordered text-center ">
             <thead class="table-dark">
             <tr>
@@ -21,17 +21,13 @@
                         <a href="{% url 'proyecto-detail' pk=contratacion.proyecto.pk %}">{{ contratacion.proyecto }}</a>
                     </td>
                     <td>
-                        <a href="{% url 'contratacion-detail' contratacion.pk %}">{{ contratacion.contrato }}</a>
+                        <a href="{% url 'contratacion-detail' contratacion.pk %}">{{ contratacion }}</a>
                     </td>
                     <td>
                         <a href="{% url 'contratista-detail' contratacion.contratista.pk %}">{{ contratacion.contratista }}</a>
                     </td>
                     <td>
-                        {% if contratacion.orden_compra %}
                         {{ contratacion.orden_compra }}
-                        {% else %}
-                        ---
-                        {% endif %}
                     </td>
                     <td>
                         {{ contratacion.fecha_inicio }}
