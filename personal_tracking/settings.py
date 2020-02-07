@@ -23,8 +23,15 @@ SECRET_KEY = '#ff+tzbu66_y8n^&fa%8y$8q6fc8ggx-r@=i0kyr6_a2***5rx'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+PROD = False
 
-ALLOWED_HOSTS = []
+SERVIDOR = socket.gethostname()
+if SERVIDOR == "office" or SERVIDOR == "rogue-one":
+    ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+else:
+    ALLOWED_HOSTS = ['amekare.pythonanywhere.com']
+    DEBUG = False
+    PROD = True
 
 # Application definition
 
@@ -74,14 +81,27 @@ WSGI_APPLICATION = 'personal_tracking.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'OPTIONS': {
+if PROD:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'amekare$personal_tracking',
+            'USER': 'amekare',
+            'PASSWORD': 'G4ll3t1c4@.',
+            'HOST': 'amekare.mysql.pythonanywhere-services.com',
+
+            },
+
+    }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'OPTIONS': {
             'read_default_file': '/etc/mysql/my.cnf',
+            }
         },
     }
-}
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
