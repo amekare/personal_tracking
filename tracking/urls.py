@@ -12,6 +12,7 @@ urlpatterns = [
     path('planificacion/sprint/<int:pk>/', views.planificacion_sprint, name='planificacion-detail'),
     path('proyecto/', views.proyecto_list, name='proyecto-list'),
     path('proyecto/<int:pk>/', views.proyecto_detail, name='proyecto-detail'),
+    path('producto/<int:pk>/', views.producto_detail, name='producto-detail'),
     path('contratacion/', views.contratacion_list, name='contratacion-list'),
     path('contratacion/<int:pk>/', views.contratacion_detail, name='contratacion-detail'),
     path('contratista/<int:pk>', views.contratista_detail, name='contratista-detail'),
