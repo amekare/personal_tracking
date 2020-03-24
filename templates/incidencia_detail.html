@@ -40,14 +40,16 @@
                         <br/>
                         <b>Horas trabajadas:</b> {{ incidencia.horas_trabajadas }}
                         <br/>
-                        <b>Sprint de inicio:</b> {{ incidencia.sprint_inicio }}
+                        <b>Horas por pagar:</b> {{ incidencia.horas_por_pagar }}
                         <br/>
-                        <b>Sprint de fin:</b>
+                        <b>Sprint de inicio y fin:</b> {{ incidencia.sprint_inicio }} -
                         {% if incidencia.sprint_fin is None %}
-                            ---
+                            PA
                         {% else %}
                             {{ incidencia.sprint_fin }}
                         {% endif %}
+
+
                         <br/>
                         <b>Asignada:</b> {{ incidencia.producto.contratacion.contratista }}
 

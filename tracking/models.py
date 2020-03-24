@@ -98,6 +98,7 @@ class Producto(models.Model):
     descripcion = models.CharField(max_length=1024, null=False, blank=False)
     horas_estimadas = models.FloatField(null=False)
     horas_utilizadas = models.FloatField(null=False, default=0)
+    horas_pagadas = models.FloatField(null=False, default=0)
     contratacion = models.ForeignKey('Contratacion', null=False, blank=False, on_delete=models.DO_NOTHING)
     modificado = models.BooleanField(null=False, default=False)
     pagado = models.BooleanField(null=False, default=False)

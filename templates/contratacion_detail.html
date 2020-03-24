@@ -63,6 +63,7 @@
             <th>Descripción</th>
             <th>Horas estimadas</th>
             <th>Horas trabajadas</th>
+            <th>Modificada</th>
             <th>Pagada</th>
             </thead>
             {% for producto in productos %}
@@ -78,6 +79,13 @@
                     </td>
                     <td>
                         {{ producto.horas_utilizadas }}
+                    </td>
+                    <td>
+                        {% if producto.modificado %}
+                            <td> Si</td>
+                        {% else %}
+                            No
+                        {% endif %}
                     </td>
                     <td>
                         {% if producto.pagado %}
