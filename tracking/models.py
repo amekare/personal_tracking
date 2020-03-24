@@ -1,5 +1,8 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.db.models import signals
+from django.dispatch import receiver
+from django.shortcuts import get_object_or_404
 
 
 class Contratista(models.Model):
@@ -12,6 +15,7 @@ class Contratista(models.Model):
     class Meta:
         verbose_name = 'Contratista'
         verbose_name_plural = 'Contratistas'
+        ordering = ('apellido1', "apellido2")
 
     def __str__(self):
         return self.nombre + " " + self.apellido1 + " " + self.apellido2
@@ -25,6 +29,7 @@ class Proyecto(models.Model):
     class Meta:
         verbose_name = 'Proyecto'
         verbose_name_plural = 'Proyectos'
+        ordering = ('codigo',)
 
     def __str__(self):
         return "" + self.codigo + ": " + self.nombre
@@ -60,6 +65,7 @@ class Contratacion(models.Model):
     class Meta:
         verbose_name = 'Contratación'
         verbose_name_plural = 'Contrataciones'
+        ordering = ('proyecto__codigo', 'tipo')
 
     def __str__(self):
         if self.orden_compra:
@@ -81,6 +87,7 @@ class BitacoraContratacion(models.Model):
 
     # cambiar esto
     usuario = models.CharField(max_length=1024, null=False, blank=False)
+    ordering = ('contratacion', 'fecha')
 
     def __str__(self):
         return "" + self.codigo + "-" + self.nombre
@@ -99,6 +106,7 @@ class Producto(models.Model):
     class Meta:
         verbose_name = 'Producto'
         verbose_name_plural = 'Productos'
+        ordering = ('contratacion', 'numero')
 
     def __str__(self):
         return self.contratacion.contrato + " " + str(self.numero) + ": " + self.descripcion
@@ -112,8 +120,15 @@ class BitacoraProducto(models.Model):
     # cambiar esto
     usuario = models.CharField(max_length=1024, null=False, blank=False)
 
+    class Meta:
+        verbose_name = 'Bitácora de producto'
+        verbose_name_plural = 'Bitácoras de productos'
+        ordering = ('producto', 'fecha')
+
     def __str__(self):
         return "" + self.codigo + "-" + self.nombre
+
+
 
 
 class Incidencia(models.Model):
@@ -151,9 +166,12 @@ class Incidencia(models.Model):
     class Meta:
         verbose_name = 'Incidencia'
         verbose_name_plural = 'Incidencias'
+        ordering = ('producto__contratacion', 'codigo')
 
     def __str__(self):
         return self.codigo
+
+
 
 
 class Factura(models.Model):
@@ -165,6 +183,7 @@ class Factura(models.Model):
     class Meta:
         verbose_name = 'Factura'
         verbose_name_plural = 'Facturas'
+        ordering = ('contratacion', 'fecha')
 
     def __str__(self):
         return self.numero + " - " + self.contratacion
@@ -179,6 +198,7 @@ class DetalleFactura(models.Model):
     class Meta:
         verbose_name = 'Detalle de factura'
         verbose_name_plural = 'Detalles de factura'
+        ordering = ('factura',)
 
     def __str__(self):
         return self.factura + " " + self.planificacion
@@ -267,3 +287,38 @@ class Observacion(models.Model):
 
     def __str__(self):
         return self.fecha.__str__() + " " + self.planificacion.__str__()
+
+
+def update_contratacion(pk):
+    contratacion = get_object_or_404(Contratacion, pk=pk)
+    productos = Producto.objects.filter(contratacion=contratacion.pk)
+    contratacion.horas_consumidas = 0
+    for producto in productos:
+        contratacion.horas_consumidas += producto.horas_utilizadas
+    contratacion.save()
+
+
+def update_producto(pk):
+    p = get_object_or_404(Producto, pk=pk)
+    incidencias = Incidencia.objects.filter(producto=p)
+    p.horas_utilizadas = 0
+    for incidencia in incidencias:
+        p.horas_utilizadas += incidencia.horas_trabajadas
+    p.save()
+    update_contratacion(p.contratacion.pk)
+
+
+###SIGNALS
+##mover a un signals.py
+
+
+@receiver(signals.post_save, sender=Incidencia)
+def save_incidencia(sender, instance, **kwargs):
+    update_producto(instance.producto.pk)
+
+
+
+
+
+
+

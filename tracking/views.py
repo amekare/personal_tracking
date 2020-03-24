@@ -96,8 +96,8 @@ def proyecto_detail(request, pk):
     else:
         proyecto = get_object_or_404(Proyecto, pk=pk)
         contrataciones = Contratacion.objects.filter(proyecto__pk=proyecto.pk)
-        #planificaciones = Planificacion.objects.filter(incidencia__producto__contratacion__proyecto__pk=pk)
-        sprints = Sprint.objects.filter(proyecto__pk = proyecto.pk)
+        # planificaciones = Planificacion.objects.filter(incidencia__producto__contratacion__proyecto__pk=pk)
+        sprints = Sprint.objects.filter(proyecto__pk=proyecto.pk)
         return render(request, 'proyecto_detail.html', {'proyecto': proyecto, 'contrataciones': contrataciones,
                                                         'sprints': sprints})
 
@@ -137,17 +137,23 @@ def contratista_detail(request, pk):
     else:
         contratista = get_object_or_404(Contratista, pk=pk)
         contrataciones = Contratacion.objects.filter(contratista=contratista)
-        return render(request, 'contratista_detail.html', {'contratista': contratista, 'contrataciones': contrataciones})
+        return render(request, 'contratista_detail.html',
+                      {'contratista': contratista, 'contrataciones': contrataciones})
 
 
 def producto_detail(request, pk):
     if not request.user.is_authenticated:
         return redirect('/login')
     else:
-        contratista = get_object_or_404(Producto, pk=pk)
-        contrataciones = Contratacion.objects.filter(contratista=contratista)
-        return render(request, 'contratista_detail.html', {'contratista': contratista, 'contrataciones': contrataciones})
+        producto = get_object_or_404(Producto, pk=pk)
+        incidencia_list = Incidencia.objects.filter(producto=producto)
+        page = request.GET.get('page', 1)
+        paginator = Paginator(incidencia_list, 10)
+        try:
+            incidencias = paginator.page(page)
+        except PageNotAnInteger:
+            incidencias = paginator.page(1)
+        except EmptyPage:
+            incidencias = paginator.page(paginator.num_pages)
 
-
-
-
+        return render(request, 'producto_detail.html', {'producto': producto, 'incidencias': incidencias})
