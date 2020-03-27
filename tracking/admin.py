@@ -1,9 +1,10 @@
 from django.contrib import admin
-from tracking.models import Incidencia, Sprint, Contratista, Planificacion, Producto, Observacion, Contratacion, Proyecto
+from tracking.models import Incidencia, Sprint, Contratista, Planificacion, Producto, Observacion, Contratacion, \
+    Proyecto
 
 
 class ContratistaAdmin(admin.ModelAdmin):
-    list_display = ('identificacion', 'nombre', 'apellido1', 'apellido2','email')
+    list_display = ('identificacion', 'nombre', 'apellido1', 'apellido2', 'email')
     search_fields = ('nombre', 'apellido1', 'apellido2')
     ordering = ('nombre',)
 
@@ -23,31 +24,43 @@ class SprintAdmin(admin.ModelAdmin):
 
 
 class ProductoAdmin(admin.ModelAdmin):
-    list_display = ('numero', 'descripcion', 'horas_estimadas', 'horas_utilizadas')
+    list_display = ('numero', 'descripcion', 'horas_estimadas', 'horas_utilizadas', 'horas_pagadas','modificado','pagado')
     search_fields = ('numero', 'descripcion')
     ordering = ("numero",)
-    list_filter = ("contratacion__contrato","contratacion__proyecto__nombre")
+    list_filter = ("contratacion__contrato", "contratacion__proyecto__nombre")
 
 
 class PlanificacionAdmin(admin.ModelAdmin):
-    list_display = (
-        'sprint', 'incidencia', 'estado_inicio', 'estado_fin')
+    list_display = ('proyecto',
+        'sprint', 'incidencia', 'estado_inicio', 'estado_fin','contratista')
     search_fields = ('sprint__numero', 'sprint__proyecto', 'incidencia__codigo')
     ordering = ("sprint",)
     list_filter = ("sprint",)
 
+    def proyecto(self, obj):
+        return obj.sprint.proyecto
+
+    def contratista(self, obj):
+        return obj.contratacion.contratista
+
 
 class ObservacionAdmin(admin.ModelAdmin):
-    list_display = ('planificacion', 'descripcion', 'fecha')
+    list_display = ('sprint', 'incidencia', 'descripcion', 'fecha')
     search_fields = ('planificacion',)
     ordering = ("fecha",)
 
+    def sprint(self, obj):
+        return obj.planificacion.sprint.__str__() + " (" + str(obj.planificacion.sprint.fecha_inicio) + ")"
+
+    def incidencia(self, obj):
+        return obj.planificacion.incidencia
+
 
 class ContratacionAdmin(admin.ModelAdmin):
-    list_display = ('contratista', 'tipo', 'rol', 'proyecto', 'orden_compra',)
+    list_display = ('contrato', 'contratista', 'tipo', 'rol', 'proyecto', 'orden_compra',)
     search_fields = ('proyecto__codigo', 'proyecto__nombre', 'contratista__nombre', 'contratista__apellido1')
     ordering = ("contratista", "proyecto")
-    list_filter = ("tipo","proyecto__nombre","rol")
+    list_filter = ("tipo", "proyecto__nombre", "rol")
 
 
 class ProyectoAdmin(admin.ModelAdmin):

@@ -65,7 +65,7 @@ class Contratacion(models.Model):
     class Meta:
         verbose_name = 'Contratación'
         verbose_name_plural = 'Contrataciones'
-        ordering = ('proyecto__codigo', 'tipo')
+        ordering = ('proyecto__codigo', 'contrato','tipo')
 
     def __str__(self):
         if self.orden_compra:
@@ -110,7 +110,7 @@ class Producto(models.Model):
         ordering = ('contratacion', 'numero')
 
     def __str__(self):
-        return self.contratacion.contrato + " " + str(self.numero) + ": " + self.descripcion
+        return str(self.numero) + ": " + self.descripcion + " ("+self.contratacion.contrato+")"
 
 
 class BitacoraProducto(models.Model):
@@ -272,8 +272,7 @@ class Planificacion(models.Model):
 
         super(Planificacion, self).save(*args, **kwargs)
 
-    def get_sprint(self, obj):
-        return obj.sprint
+
 
 
 class Observacion(models.Model):

@@ -88,8 +88,10 @@
                         {% endif %}
                     </td>
                     <td>
-                        {% if producto.pagado %}
-                            Si
+                        {% if producto.modificado %}
+                            No se paga por modificación
+                        {% elif producto.pagado %}
+                            Sí
                         {% else %}
                             No
                         {% endif %}
