@@ -146,14 +146,25 @@ def producto_detail(request, pk):
         return redirect('/login')
     else:
         producto = get_object_or_404(Producto, pk=pk)
-        incidencia_list = Incidencia.objects.filter(producto=producto)
-        page = request.GET.get('page', 1)
-        paginator = Paginator(incidencia_list, 10)
-        try:
-            incidencias = paginator.page(page)
-        except PageNotAnInteger:
-            incidencias = paginator.page(1)
-        except EmptyPage:
-            incidencias = paginator.page(paginator.num_pages)
+        if producto.modificado:
+            productohijo_list = Producto.objects.filter(padre=producto.pk)
+            page = request.GET.get('page', 1)
+            paginator = Paginator(productohijo_list, 10)
+            try:
+                incidencias = paginator.page(page)
+            except PageNotAnInteger:
+                incidencias = paginator.page(1)
+            except EmptyPage:
+                incidencias = paginator.page(paginator.num_pages)
+        else:
+            incidencia_list = Incidencia.objects.filter(producto=producto)
+            page = request.GET.get('page', 1)
+            paginator = Paginator(incidencia_list, 10)
+            try:
+                incidencias = paginator.page(page)
+            except PageNotAnInteger:
+                incidencias = paginator.page(1)
+            except EmptyPage:
+                incidencias = paginator.page(paginator.num_pages)
 
         return render(request, 'producto_detail.html', {'producto': producto, 'incidencias': incidencias})

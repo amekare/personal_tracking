@@ -65,7 +65,7 @@ class Contratacion(models.Model):
     class Meta:
         verbose_name = 'Contratación'
         verbose_name_plural = 'Contrataciones'
-        ordering = ('proyecto__codigo', 'contrato','tipo')
+        ordering = ('proyecto__codigo', 'contrato', 'tipo')
 
     def __str__(self):
         if self.orden_compra:
@@ -110,7 +110,7 @@ class Producto(models.Model):
         ordering = ('contratacion', 'numero')
 
     def __str__(self):
-        return str(self.numero) + ": " + self.descripcion + " ("+self.contratacion.contrato+")"
+        return str(self.numero) + ": " + self.descripcion + " (" + self.contratacion.contrato + ")"
 
 
 class BitacoraProducto(models.Model):
@@ -128,8 +128,6 @@ class BitacoraProducto(models.Model):
 
     def __str__(self):
         return "" + self.codigo + "-" + self.nombre
-
-
 
 
 class Incidencia(models.Model):
@@ -171,8 +169,6 @@ class Incidencia(models.Model):
 
     def __str__(self):
         return self.codigo
-
-
 
 
 class Factura(models.Model):
@@ -273,8 +269,6 @@ class Planificacion(models.Model):
         super(Planificacion, self).save(*args, **kwargs)
 
 
-
-
 class Observacion(models.Model):
     fecha = models.DateField(null=False, blank=False, auto_now_add=True)
     descripcion = models.CharField(max_length=512)
@@ -302,10 +296,31 @@ def update_producto(pk):
     p = get_object_or_404(Producto, pk=pk)
     incidencias = Incidencia.objects.filter(producto=p)
     p.horas_utilizadas = 0
+    p.horas_pagadas = 0
     for incidencia in incidencias:
         p.horas_utilizadas += incidencia.horas_trabajadas
+        print(incidencia.estado)
+        print(incidencia.get_estado_display())
+        print(incidencia.horas_por_pagar)
+        if incidencia.estado == "7":
+            print("hello")
+            print(p.horas_pagadas)
+            p.horas_pagadas += incidencia.horas_por_pagar
     p.save()
     update_contratacion(p.contratacion.pk)
+    if p.padre:
+        update_productopadre(p.padre.pk)
+
+
+def update_productopadre(pk):
+    p = get_object_or_404(Producto, pk=pk)
+    productos_hijos = Producto.objects.filter(padre=p)
+    p.horas_utilizadas = 0
+    p.horas_pagadas = 0
+    for producto in productos_hijos:
+        p.horas_utilizadas += producto.horas_utilizadas
+        p.horas_pagadas += producto.horas_pagadas
+    p.save()
 
 
 ###SIGNALS
@@ -315,10 +330,3 @@ def update_producto(pk):
 @receiver(signals.post_save, sender=Incidencia)
 def save_incidencia(sender, instance, **kwargs):
     update_producto(instance.producto.pk)
-
-
-
-
-
-
-
