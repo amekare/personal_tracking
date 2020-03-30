@@ -299,13 +299,7 @@ def update_producto(pk):
     p.horas_pagadas = 0
     for incidencia in incidencias:
         p.horas_utilizadas += incidencia.horas_trabajadas
-        print(incidencia.estado)
-        print(incidencia.get_estado_display())
-        print(incidencia.horas_por_pagar)
-        if incidencia.estado == "7":
-            print("hello")
-            print(p.horas_pagadas)
-            p.horas_pagadas += incidencia.horas_por_pagar
+        p.horas_pagadas += incidencia.horas_por_pagar
     p.save()
     update_contratacion(p.contratacion.pk)
     if p.padre:
