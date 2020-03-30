@@ -54,7 +54,7 @@
     <hr>
     <div class="container">
         <h2>Productos</h2>
-    <a type="button" class="btn btn-primary" href="{{ request.META.HTTP_REFERER }}">Agregar</a>
+    <a type="button" class="btn btn-primary" href="#">Agregar</a>
     <br>
     <br>
         <table class="table table-bordered text-center">
@@ -126,5 +126,62 @@
 
     </div>
     <hr>
+        <div class="container">
+        <h2>Sprints</h2>
+
+    <br>
+    <br>
+        <table class="table table-bordered text-center">
+            <thead class="thead-dark">
+            <th>Número</th>
+            <th>Fecha de inicio</th>
+            <th>Fecha de fin</th>
+            <th>Fecha de revisión</th>
+            </thead>
+            {% for sprint in sprints %}
+                <tr>
+                    <td>
+                        <a href="{% url 'planificacion-detail' pk=sprint.pk %}"> {{ sprint }}</a>
+                    </td>
+                    <td>
+                        {{ sprint.fecha_inicio }}
+                    </td>
+                    <td>
+                        {{ sprint.fecha_fin }}
+                    </td>
+                    <td>
+                        {{ sprint.fecha_revision }}
+                    </td>
+
+                </tr>
+            {% endfor %}
+        </table>
+            {% if sprints.has_other_pages %}
+                <ul class="pagination">
+                    {% if sprints.has_previous %}
+                        <li class="page-item"><a class="page-link" href="?page={{ sprints.previous_page_number }}">&laquo;</a>
+                        </li>
+                    {% else %}
+                        <li class="disabled page-link"><span>&laquo;</span></li>
+                    {% endif %}
+                    {% for i in sprints.paginator.page_range %}
+                        {% if sprints.number == i %}
+                            <li class="active page-link"><span>{{ i }} <span class="sr-only">(current)</span></span>
+                            </li>
+                        {% else %}
+                            <li><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+                    {% if sprints.has_next %}
+                        <li class="page-item"><a class="page-link"
+                                                 href="?page={{ sprints.next_page_number }}">&raquo;</a></li>
+                    {% else %}
+                        <li class="disabled page-link"><span>&raquo;</span></li>
+                    {% endif %}
+                </ul>
+            {% endif %}
+
+    </div>
+
 
 {% endblock %}

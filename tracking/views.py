@@ -127,8 +127,27 @@ def contratacion_detail(request, pk):
         except EmptyPage:
             productos = paginator.page(paginator.num_pages)
 
+        planificacion_list = Planificacion.objects.filter(incidencia__producto__contratacion=contratacion)
+
+        sprints_id = []
+        for plan in planificacion_list:
+            if plan.sprint.pk in sprints_id:
+                pass
+            else:
+                sprints_id.append(plan.sprint.pk)
+
+        sprint_list = Sprint.objects.filter(pk__in=sprints_id)
+        page2 = request.GET.get('page', 1)
+        paginator2 = Paginator(sprint_list, 10)
+        try:
+            sprints = paginator2.page(page2)
+        except PageNotAnInteger:
+            sprints = paginator2.page(1)
+        except EmptyPage:
+            sprints = paginator2.page(paginator2.num_pages)
+
         return render(request, 'contratacion_detail.html',
-                      {'contratacion': contratacion, 'productos': productos})
+                      {'contratacion': contratacion, 'productos': productos, 'sprints':sprints})
 
 
 def contratista_detail(request, pk):

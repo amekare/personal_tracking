@@ -215,7 +215,7 @@ class Sprint(models.Model):
         verbose_name_plural = 'Sprints'
 
     def __str__(self):
-        return "Sprint " + self.numero.__str__()
+        return "Sprint " + self.numero.__str__() + " - "+ self.proyecto.nombre
 
     def nombreCompleto(self):
         return "Sprint " + self.numero.__str__() + self.proyecto
