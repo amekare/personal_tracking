@@ -289,7 +289,7 @@ class Observacion(models.Model):
 
 def update_contratacion(pk):
     contratacion = get_object_or_404(Contratacion, pk=pk)
-    productos = Producto.objects.filter(contratacion=contratacion.pk)
+    productos = Producto.objects.filter(contratacion=contratacion.pk, modificado=False)
     contratacion.horas_consumidas = 0
     for producto in productos:
         contratacion.horas_consumidas += producto.horas_pagadas
