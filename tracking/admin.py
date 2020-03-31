@@ -12,7 +12,7 @@ class ContratistaAdmin(admin.ModelAdmin):
 class IncidenciaAdmin(admin.ModelAdmin):
     list_display = ('codigo','tipo',  'descripcion', 'producto', 'estado', 'horas_estimadas', 'horas_trabajadas','clasificacion')
     search_fields = ('tipo', 'codigo', 'estado', 'descripcion')
-    list_filter = ('estado', 'tipo')
+    list_filter = ('estado', 'tipo','clasificacion')
     ordering = ('codigo',)
 
 
