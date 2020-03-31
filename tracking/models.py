@@ -56,12 +56,14 @@ class Contratacion(models.Model):
     orden_compra = models.CharField(max_length=128, null=True, blank=True)
     horas_contratadas = models.FloatField(null=True)
     horas_consumidas = models.FloatField(null=False, default=0)
+    horas_pagadas = models.FloatField(null=False, default=0)
     # presupuesto puede ser null porque si son internos no se tiene presupuesto asignado
     presupuesto_adjudicado = models.DecimalField(null=True, max_digits=15, decimal_places=2)
     presupuesto_consumido = models.DecimalField(null=True, max_digits=15, decimal_places=2)
     pago_hora = models.DecimalField(null=True, max_digits=15, decimal_places=2, default=0)
     fecha_inicio = models.DateField(null=False, blank=False)
     fecha_fin = models.DateField(null=True, blank=True)
+    fecha_prorroga = models.DateField(null=True, blank=True)
 
     class Meta:
         verbose_name = 'Contratación'

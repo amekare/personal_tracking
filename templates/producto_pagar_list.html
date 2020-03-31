@@ -6,17 +6,13 @@
     <hr>
     <div class="card">
         <div class="card-header">
-            <b>Contratación {{ contratacion.orden_compra }}</b>
+            <b>Contratación <a  href="{% url 'contratacion-detail' pk=contratacion.pk %}">{{ contratacion.contrato }} </a>- Proyecto <a
+                    href="{% url 'proyecto-detail' pk=contratacion.proyecto.pk %}">{{ contratacion.proyecto }} </a></b>
         </div>
         <div class="card-body">
             <div class="container-fluid">
                 <div class="row no-gutters">
                     <div class="col-6">
-                        <b>Proyecto:</b> <a
-                            href="{% url 'proyecto-detail' pk=contratacion.proyecto.pk %}">{{ contratacion.proyecto }} </a>
-                        <br>
-                        <b>Contrato:</b> {{ contratacion.contrato }}
-                        <br>
                         <b>Orden de compra:</b> {{ contratacion.orden_compra }}
                         <br>
                         <b>Contratista:</b> <a
@@ -25,9 +21,7 @@
                         <b>Tipo:</b> {{ contratacion.get_tipo_display }}
                         <br>
                         <b>Rol:</b> {{ contratacion.get_rol_display }}
-                    </div>
-                    <div class="col-6">
-                        <b>Fecha de inicio:</b> {{ contratacion.fecha_inicio }}
+                        <br> <b>Fecha de inicio:</b> {{ contratacion.fecha_inicio }}
                         <br>
                         <b>Fecha de fin:</b>
                         {% if contratacion.fecha_fin %}
@@ -35,10 +29,20 @@
                         {% else %}
                             - - -
                         {% endif %}
+                    </div>
+                    <div class="col-6">
+                        <b>Fecha de prórroga:</b>
+                        {% if contratacion.fecha_prorroga %}
+                            {{ contratacion.fecha_prorroga }}
+                        {% else %}
+                            - - -
+                        {% endif %}
                         <br>
                         <b>Horas contratadas:</b> {{ contratacion.horas_contratadas }}
                         <br>
                         <b>Horas consumidas:</b> {{ contratacion.horas_consumidas }}
+                        <br>
+                        <b>Horas facturadas:</b> {{ contratacion.horas_pagadas }}
                         <br>
                         <b>Presupuesto adjudicado:</b> {{ contratacion.get_presupuesto_adjudicado }}
                         <br>
@@ -53,8 +57,8 @@
     </div>
     <hr>
     <div class="container">
-        <h2>Por pagar: {{ total }} horas</h2>
-    <br>
+        <h2>Por pagar: ₡{{ total_monto }} ({{ total_horas }} horas)</h2>
+        <br>
         <table class="table table-bordered text-center">
             <thead class="thead-dark">
             <th>Producto</th>
@@ -66,7 +70,7 @@
             {% for incidencia in incidencias %}
                 <tr>
                     <td>
-                        <a href="{% url 'producto-detail' pk=incidencia.producto.pk %}"> {{ incidencia.producto }}</a>
+                        <a href="{% url 'producto-detail' pk=incidencia.producto.pk %}"> {{ incidencia.producto.numero }}</a>
                     </td>
                     <td>
                         <a href="{% url 'incidencia-detail' pk=incidencia.pk %}"> {{ incidencia.codigo }}</a>
@@ -77,37 +81,37 @@
                     <td>
                         {{ incidencia.horas_por_pagar }}
                     </td>
-                <td>
-                    {{ incidencia.get_pagar }}
-                </td>
+                    <td>
+                        {{ incidencia.get_pagar }}
+                    </td>
 
                 </tr>
             {% endfor %}
         </table>
-            {% if incidencias.has_other_pages %}
-                <ul class="pagination">
-                    {% if incidencias.has_previous %}
-                        <li class="page-item"><a class="page-link" href="?page={{ incidencias.previous_page_number }}">&laquo;</a>
+        {% if incidencias.has_other_pages %}
+            <ul class="pagination">
+                {% if incidencias.has_previous %}
+                    <li class="page-item"><a class="page-link" href="?page={{ incidencias.previous_page_number }}">&laquo;</a>
+                    </li>
+                {% else %}
+                    <li class="disabled page-link"><span>&laquo;</span></li>
+                {% endif %}
+                {% for i in incidencias.paginator.page_range %}
+                    {% if incidencias.number == i %}
+                        <li class="active page-link"><span>{{ i }} <span class="sr-only">(current)</span></span>
                         </li>
                     {% else %}
-                        <li class="disabled page-link"><span>&laquo;</span></li>
+                        <li><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
                     {% endif %}
-                    {% for i in incidencias.paginator.page_range %}
-                        {% if incidencias.number == i %}
-                            <li class="active page-link"><span>{{ i }} <span class="sr-only">(current)</span></span>
-                            </li>
-                        {% else %}
-                            <li><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
-                        {% endif %}
-                    {% endfor %}
-                    {% if incidencias.has_next %}
-                        <li class="page-item"><a class="page-link"
-                                                 href="?page={{ incidencias.next_page_number }}">&raquo;</a></li>
-                    {% else %}
-                        <li class="disabled page-link"><span>&raquo;</span></li>
-                    {% endif %}
-                </ul>
-            {% endif %}
+                {% endfor %}
+                {% if incidencias.has_next %}
+                    <li class="page-item"><a class="page-link"
+                                             href="?page={{ incidencias.next_page_number }}">&raquo;</a></li>
+                {% else %}
+                    <li class="disabled page-link"><span>&raquo;</span></li>
+                {% endif %}
+            </ul>
+        {% endif %}
 
     </div>
     <hr>
