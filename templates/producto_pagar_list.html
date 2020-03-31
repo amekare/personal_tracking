@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+
+{% block title %} Contratacion {{ contratacion.contrato }}{% endblock %}
+{% block content %}
+    <a type="button" class="btn btn-primary" href="{{ request.META.HTTP_REFERER }}">Volver</a>
+    <hr>
+    <div class="card">
+        <div class="card-header">
+            <b>Contratación {{ contratacion.orden_compra }}</b>
+        </div>
+        <div class="card-body">
+            <div class="container-fluid">
+                <div class="row no-gutters">
+                    <div class="col-6">
+                        <b>Proyecto:</b> <a
+                            href="{% url 'proyecto-detail' pk=contratacion.proyecto.pk %}">{{ contratacion.proyecto }} </a>
+                        <br>
+                        <b>Contrato:</b> {{ contratacion.contrato }}
+                        <br>
+                        <b>Orden de compra:</b> {{ contratacion.orden_compra }}
+                        <br>
+                        <b>Contratista:</b> <a
+                            href="{% url 'contratista-detail' pk=contratacion.contratista.pk %}"> {{ contratacion.contratista }}</a>
+                        <br>
+                        <b>Tipo:</b> {{ contratacion.get_tipo_display }}
+                        <br>
+                        <b>Rol:</b> {{ contratacion.get_rol_display }}
+                    </div>
+                    <div class="col-6">
+                        <b>Fecha de inicio:</b> {{ contratacion.fecha_inicio }}
+                        <br>
+                        <b>Fecha de fin:</b>
+                        {% if contratacion.fecha_fin %}
+                            {{ contratacion.fecha_fin }}
+                        {% else %}
+                            - - -
+                        {% endif %}
+                        <br>
+                        <b>Horas contratadas:</b> {{ contratacion.horas_contratadas }}
+                        <br>
+                        <b>Horas consumidas:</b> {{ contratacion.horas_consumidas }}
+                        <br>
+                        <b>Presupuesto adjudicado:</b> {{ contratacion.get_presupuesto_adjudicado }}
+                        <br>
+                        <b>Presupuesto consumido:</b> {{ contratacion.get_presupuesto_consumido }}
+
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+    <hr>
+    <div class="container">
+        <h2>Por pagar: {{ total }} horas</h2>
+    <br>
+        <table class="table table-bordered text-center">
+            <thead class="thead-dark">
+            <th>Producto</th>
+            <th>Código</th>
+            <th>Descripción</th>
+            <th>Horas por pagar</th>
+            <th>Pago</th>
+            </thead>
+            {% for incidencia in incidencias %}
+                <tr>
+                    <td>
+                        <a href="{% url 'producto-detail' pk=incidencia.producto.pk %}"> {{ incidencia.producto }}</a>
+                    </td>
+                    <td>
+                        <a href="{% url 'incidencia-detail' pk=incidencia.pk %}"> {{ incidencia.codigo }}</a>
+                    </td>
+                    <td>
+                        {{ incidencia.descripcion }}
+                    </td>
+                    <td>
+                        {{ incidencia.horas_por_pagar }}
+                    </td>
+                <td>
+                    {{ incidencia.get_pagar }}
+                </td>
+
+                </tr>
+            {% endfor %}
+        </table>
+            {% if incidencias.has_other_pages %}
+                <ul class="pagination">
+                    {% if incidencias.has_previous %}
+                        <li class="page-item"><a class="page-link" href="?page={{ incidencias.previous_page_number }}">&laquo;</a>
+                        </li>
+                    {% else %}
+                        <li class="disabled page-link"><span>&laquo;</span></li>
+                    {% endif %}
+                    {% for i in incidencias.paginator.page_range %}
+                        {% if incidencias.number == i %}
+                            <li class="active page-link"><span>{{ i }} <span class="sr-only">(current)</span></span>
+                            </li>
+                        {% else %}
+                            <li><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+                    {% if incidencias.has_next %}
+                        <li class="page-item"><a class="page-link"
+                                                 href="?page={{ incidencias.next_page_number }}">&raquo;</a></li>
+                    {% else %}
+                        <li class="disabled page-link"><span>&raquo;</span></li>
+                    {% endif %}
+                </ul>
+            {% endif %}
+
+    </div>
+    <hr>
+
+
+{% endblock %}

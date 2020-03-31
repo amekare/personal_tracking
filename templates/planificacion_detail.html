@@ -3,7 +3,9 @@
 {% block title %}Planificación {{ sprint }}{% endblock %}
 {% block content %}
     <a type="button" class="btn btn-primary" href="{{ request.META.HTTP_REFERER }}">Volver</a>
-    <a type="button" class="btn btn-success" href="{% url 'proyecto-list' %}">Finalizar sprint</a>
+    {% if sprint.finalizado == False %}
+        <a type="button" class="btn btn-success" href="{% url 'proyecto-list' %}">Finalizar sprint</a>
+    {% endif %}
     <hr>
     <div class="card">
         <div class="card-header">
@@ -14,9 +16,17 @@
             <b>Fin:</b> {{ sprint.fecha_fin }}
             <br>
             <b>Revisión:</b> {{ sprint.fecha_revision }}
+            <br>
+            <b>Finalizado:</b>
+            {% if sprint.finalizado %}
+                Sí
+            {% else %}
+                No
+            {% endif %}
         </div>
     </div>
     <hr>
+    <h1 align="center">Asignaciones</h1>
     <div class="container">
         <table class="table table-bordered text-center">
             <thead class="thead-dark">
@@ -32,7 +42,7 @@
             {% for plani in planificaciones %}
                 <tr>
                     <td>
-                        <a href="{% url 'incidencia-detail' pk=plani.incidencia.pk %}"> {{ plani.incidencia.codigo }}</a>
+                        <a href="#"> {{ plani.incidencia.codigo }}</a>
                     </td>
                     <td>{{ plani.get_estado_inicio_display }}</td>
                     {% if plani.estado_fin %}

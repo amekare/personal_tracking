@@ -59,6 +59,7 @@ class Contratacion(models.Model):
     # presupuesto puede ser null porque si son internos no se tiene presupuesto asignado
     presupuesto_adjudicado = models.DecimalField(null=True, max_digits=15, decimal_places=2)
     presupuesto_consumido = models.DecimalField(null=True, max_digits=15, decimal_places=2)
+    pago_hora = models.DecimalField(null=True, max_digits=15, decimal_places=2, default=0)
     fecha_inicio = models.DateField(null=False, blank=False)
     fecha_fin = models.DateField(null=True, blank=True)
 
@@ -82,7 +83,7 @@ class Contratacion(models.Model):
 
 class BitacoraContratacion(models.Model):
     observacion = models.CharField(max_length=1024, null=False, blank=False)
-    fecha = models.DateTimeField(auto_now_add=True, blank=True)
+    fecha = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     contratacion = models.ForeignKey('Contratacion', null=False, blank=False, on_delete=models.DO_NOTHING)
 
     # cambiar esto
@@ -96,12 +97,12 @@ class BitacoraContratacion(models.Model):
 class Producto(models.Model):
     numero = models.FloatField(blank=False, null=False)
     descripcion = models.CharField(max_length=1024, null=False, blank=False)
-    horas_estimadas = models.FloatField(null=False)
-    horas_utilizadas = models.FloatField(null=False, default=0)
-    horas_pagadas = models.FloatField(null=False, default=0)
+    horas_estimadas = models.FloatField(null=False,blank=False, )
+    horas_utilizadas = models.FloatField(null=False, blank=False, default=0)
+    horas_pagadas = models.FloatField(null=False, blank=False, default=0)
     contratacion = models.ForeignKey('Contratacion', null=False, blank=False, on_delete=models.DO_NOTHING)
-    modificado = models.BooleanField(null=False, default=False)
-    pagado = models.BooleanField(null=False, default=False)
+    modificado = models.BooleanField(null=False, blank=False,  default=False)
+    pagado = models.BooleanField(null=False, blank=False, default=False)
     padre = models.ForeignKey('self', on_delete=models.DO_NOTHING, null=True, blank=True)
 
     class Meta:
@@ -145,8 +146,13 @@ class Incidencia(models.Model):
         ('4', 'En pruebas'),
         ('5', 'Aprobado por PO'),
         ('6', 'Hecho'),
-        ('7', 'Pagada'),
-        ('8', 'Por pagar'),
+    )
+    CLASIFICACION_CHOICES = (
+        ('1', 'Sin pagar'),
+        ('2', 'Por pagar'),
+        ('3', 'Pagada'),
+        ('4', 'Desarrollo CI'),
+        ('5', 'Garantía'),
     )
     codigo = models.CharField(max_length=32, unique=True)
     descripcion = models.CharField(max_length=256, null=False)
@@ -160,7 +166,8 @@ class Incidencia(models.Model):
     sprint_inicio = models.ForeignKey('Sprint', on_delete=models.DO_NOTHING, null=False, related_name="sprint_inicio")
     sprint_fin = models.ForeignKey('Sprint', on_delete=models.DO_NOTHING, null=True, related_name="sprint_fin",
                                    blank=True)
-    reasignada = models.BooleanField(null=True, default=False)
+    clasificacion = models.CharField(choices=CLASIFICACION_CHOICES, max_length=3, null=False, blank=False, default='1')
+    reasignada = models.BooleanField(null=True, blank=True, default=False)
 
     class Meta:
         verbose_name = 'Incidencia'
@@ -170,6 +177,9 @@ class Incidencia(models.Model):
     def __str__(self):
         return self.codigo
 
+    def get_pagar(self):
+        total = self.horas_por_pagar * float(self.producto.contratacion.pago_hora)
+        return "₡ {:,.2f}".format(total)
 
 class Factura(models.Model):
     numero = models.CharField(max_length=25, null=False)
@@ -207,6 +217,7 @@ class Sprint(models.Model):
     fecha_revision = models.DateField(null=False, blank=False)
     numero = models.IntegerField(null=False, blank=False)
     proyecto = models.ForeignKey('Proyecto', null=False, on_delete=models.DO_NOTHING)
+    finalizado = models.BooleanField(null=False, blank=False, default=False)
 
     class Meta:
         ordering = ["numero", "proyecto"]
@@ -229,25 +240,16 @@ class Planificacion(models.Model):
         ('4', 'En pruebas'),
         ('5', 'Aprobado por PO'),
         ('6', 'Hecho'),
-        ('7', 'Pagada'),
-        ('8', 'Por pagar'),
-        ('9', 'En espera'),
+        ('7', 'En espera'),
     )
-    CLASIFICACION_CHOICES = (
-        ('1', 'Sin pagar'),
-        ('2', 'Por pagar'),
-        ('3', 'Pagada'),
-        ('4', 'Desarrollo CI'),
-        ('5', 'Garantía'),
-    )
+
     estado_inicio = models.CharField(choices=ESTADO_CHOICES, max_length=2, null=False, blank=False)
     estado_fin = models.CharField(choices=ESTADO_CHOICES, max_length=2, null=True, blank=True)
     sprint = models.ForeignKey('Sprint', on_delete=models.DO_NOTHING, null=False, blank=False)
     incidencia = models.ForeignKey('Incidencia', on_delete=models.DO_NOTHING, null=False, blank=False)
-    fecha_asignada = models.DateField(null=False, blank=False, auto_now_add=True)
+    fecha_asignada = models.DateField(null=False, blank=False, auto_now_add=False)
     contratacion = models.ForeignKey('Contratacion', on_delete=models.DO_NOTHING, null=False, blank=False)
-    clasificacion = models.CharField(choices=CLASIFICACION_CHOICES, max_length=3, null=False, blank=False, default='1')
-    facturacion = models.BooleanField(null=False, default=False)
+
 
     class Meta:
         ordering = ["sprint", "fecha_asignada"]
@@ -281,6 +283,8 @@ class Observacion(models.Model):
 
     def __str__(self):
         return self.fecha.__str__() + " " + self.planificacion.__str__()
+
+
 
 
 def update_contratacion(pk):
