@@ -292,7 +292,7 @@ def update_contratacion(pk):
     productos = Producto.objects.filter(contratacion=contratacion.pk)
     contratacion.horas_consumidas = 0
     for producto in productos:
-        contratacion.horas_consumidas += producto.horas_utilizadas
+        contratacion.horas_consumidas += producto.horas_pagadas
     contratacion.save()
 
 
