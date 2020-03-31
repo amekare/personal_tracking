@@ -10,9 +10,10 @@ class ContratistaAdmin(admin.ModelAdmin):
 
 
 class IncidenciaAdmin(admin.ModelAdmin):
-    list_display = ('codigo','tipo',  'descripcion', 'producto', 'estado', 'horas_estimadas', 'horas_trabajadas','clasificacion')
+    list_display = (
+    'codigo', 'tipo', 'descripcion', 'producto', 'estado', 'horas_estimadas', 'horas_trabajadas', 'clasificacion')
     search_fields = ('tipo', 'codigo', 'estado', 'descripcion')
-    list_filter = ('estado', 'tipo','clasificacion')
+    list_filter = ('estado', 'tipo', 'clasificacion')
     ordering = ('codigo',)
 
 
@@ -24,7 +25,8 @@ class SprintAdmin(admin.ModelAdmin):
 
 
 class ProductoAdmin(admin.ModelAdmin):
-    list_display = ('numero', 'descripcion', 'horas_estimadas', 'horas_utilizadas', 'horas_pagadas','modificado','pagado')
+    list_display = (
+    'numero', 'descripcion', 'horas_estimadas', 'horas_utilizadas', 'horas_pagadas', 'modificado', 'pagado')
     search_fields = ('numero', 'descripcion')
     ordering = ("numero",)
     list_filter = ("contratacion__contrato", "contratacion__proyecto__nombre")
@@ -32,9 +34,9 @@ class ProductoAdmin(admin.ModelAdmin):
 
 class PlanificacionAdmin(admin.ModelAdmin):
     list_display = ('sprint',
-        'incidencia', 'estado_inicio', 'estado_fin','contratista')
-    search_fields = ( 'estado_inicio',"incidencia__codigo","sprint__proyecto__nombre")
-    ordering = ("sprint__proyecto","sprint__numero","incidencia__codigo")
+                    'incidencia', 'estado_inicio', 'estado_fin', 'contratista')
+    search_fields = ('estado_inicio', "incidencia__codigo", "sprint__proyecto__nombre")
+    ordering = ("sprint__proyecto", "sprint__numero", "incidencia__codigo")
     list_filter = ("sprint__proyecto",)
 
     def proyecto(self, obj):

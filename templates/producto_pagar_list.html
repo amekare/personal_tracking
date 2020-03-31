@@ -57,7 +57,7 @@
     </div>
     <hr>
     <div class="container">
-        <h2>Por pagar: ₡{{ total_monto }} ({{ total_horas }} horas)</h2>
+        <h2>Por pagar: ₡{{ total_monto|floatformat:2 }} ({{ total_horas|floatformat:2 }} horas)</h2>
         <br>
         <table class="table table-bordered text-center">
             <thead class="thead-dark">

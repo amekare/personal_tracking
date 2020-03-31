@@ -99,11 +99,11 @@ class BitacoraContratacion(models.Model):
 class Producto(models.Model):
     numero = models.FloatField(blank=False, null=False)
     descripcion = models.CharField(max_length=1024, null=False, blank=False)
-    horas_estimadas = models.FloatField(null=False,blank=False, )
+    horas_estimadas = models.FloatField(null=False, blank=False, )
     horas_utilizadas = models.FloatField(null=False, blank=False, default=0)
     horas_pagadas = models.FloatField(null=False, blank=False, default=0)
     contratacion = models.ForeignKey('Contratacion', null=False, blank=False, on_delete=models.DO_NOTHING)
-    modificado = models.BooleanField(null=False, blank=False,  default=False)
+    modificado = models.BooleanField(null=False, blank=False, default=False)
     pagado = models.BooleanField(null=False, blank=False, default=False)
     padre = models.ForeignKey('self', on_delete=models.DO_NOTHING, null=True, blank=True)
 
@@ -183,6 +183,7 @@ class Incidencia(models.Model):
         total = self.horas_por_pagar * float(self.producto.contratacion.pago_hora)
         return "₡ {:,.2f}".format(total)
 
+
 class Factura(models.Model):
     numero = models.CharField(max_length=25, null=False)
     fecha = models.DateField(null=False, blank=False)
@@ -228,7 +229,7 @@ class Sprint(models.Model):
         verbose_name_plural = 'Sprints'
 
     def __str__(self):
-        return "Sprint " + self.numero.__str__() + " - "+ self.proyecto.nombre
+        return "Sprint " + self.numero.__str__() + " - " + self.proyecto.nombre
 
     def nombreCompleto(self):
         return "Sprint " + self.numero.__str__() + self.proyecto
@@ -251,7 +252,6 @@ class Planificacion(models.Model):
     incidencia = models.ForeignKey('Incidencia', on_delete=models.DO_NOTHING, null=False, blank=False)
     fecha_asignada = models.DateField(null=False, blank=False, auto_now_add=False)
     contratacion = models.ForeignKey('Contratacion', on_delete=models.DO_NOTHING, null=False, blank=False)
-
 
     class Meta:
         ordering = ["sprint", "fecha_asignada"]
@@ -285,8 +285,6 @@ class Observacion(models.Model):
 
     def __str__(self):
         return self.fecha.__str__() + " " + self.planificacion.__str__()
-
-
 
 
 def update_contratacion(pk):
