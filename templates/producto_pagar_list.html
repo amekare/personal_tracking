@@ -64,6 +64,8 @@
             <th>Producto</th>
             <th>Código</th>
             <th>Descripción</th>
+            <th>Horas estimadas</th>
+            <th>Horas trabajadas</th>
             <th>Horas por pagar</th>
             <th>Pago</th>
             </thead>
@@ -77,6 +79,11 @@
                     </td>
                     <td>
                         {{ incidencia.descripcion }}
+                    </td>
+                    <td>
+                        {{ incidencia.horas_estimadas }}
+                    </td><td>
+                        {{ incidencia.horas_trabajadas }}
                     </td>
                     <td>
                         {{ incidencia.horas_por_pagar }}
