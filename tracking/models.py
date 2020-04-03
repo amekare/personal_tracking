@@ -175,7 +175,7 @@ class Incidencia(models.Model):
     class Meta:
         verbose_name = 'Incidencia'
         verbose_name_plural = 'Incidencias'
-        ordering = ('producto__contratacion', 'codigo')
+        ordering = ('producto__contratacion', 'numero')
 
     def __str__(self):
         return self.codigo
@@ -263,7 +263,7 @@ class Planificacion(models.Model):
         ordering = ["sprint", "fecha_asignada"]
         verbose_name = "Planificación"
         verbose_name_plural = "Planificaciones"
-        unique_together = ('sprint', 'incidencia', 'contratacion')
+        unique_together = ('sprint', 'contratacion', 'incidencia', )
 
     def __str__(self):
         return self.sprint.__str__() + "(" + self.fecha_asignada.__str__() + ") -" + self.incidencia.codigo
