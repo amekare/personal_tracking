@@ -260,7 +260,7 @@ class Planificacion(models.Model):
     contratacion = models.ForeignKey('Contratacion', on_delete=models.DO_NOTHING, null=False, blank=False)
 
     class Meta:
-        ordering = ["sprint", "fecha_asignada"]
+        ordering = ["sprint", "incidencia","contratacion"]
         verbose_name = "Planificación"
         verbose_name_plural = "Planificaciones"
         unique_together = ('sprint', 'contratacion', 'incidencia', )
