@@ -68,7 +68,7 @@ class Contratacion(models.Model):
     class Meta:
         verbose_name = 'Contratación'
         verbose_name_plural = 'Contrataciones'
-        ordering = ('proyecto__codigo', 'contrato', 'tipo')
+        ordering = ('proyecto__codigo', 'contratista')
 
     def __str__(self):
         if self.orden_compra:
@@ -170,6 +170,7 @@ class Incidencia(models.Model):
                                    blank=True)
     clasificacion = models.CharField(choices=CLASIFICACION_CHOICES, max_length=3, null=False, blank=False, default='1')
     reasignada = models.BooleanField(null=True, blank=True, default=False)
+    numero = models.IntegerField(blank=False, null=False, default=0)
 
     class Meta:
         verbose_name = 'Incidencia'
@@ -182,6 +183,11 @@ class Incidencia(models.Model):
     def get_pagar(self):
         total = self.horas_por_pagar * float(self.producto.contratacion.pago_hora)
         return "₡ {:,.2f}".format(total)
+
+    # @property
+    # def numero(self):
+    #     num = self.codigo.split('-')[1]
+    #     return num
 
 
 class Factura(models.Model):
@@ -257,6 +263,7 @@ class Planificacion(models.Model):
         ordering = ["sprint", "fecha_asignada"]
         verbose_name = "Planificación"
         verbose_name_plural = "Planificaciones"
+        unique_together = ('sprint', 'incidencia', 'contratacion')
 
     def __str__(self):
         return self.sprint.__str__() + "(" + self.fecha_asignada.__str__() + ") -" + self.incidencia.codigo
@@ -327,4 +334,9 @@ def update_productopadre(pk):
 
 @receiver(signals.post_save, sender=Incidencia)
 def save_incidencia(sender, instance, **kwargs):
+    if instance.numero or instance.numero != 0:
+        pass
+    else:
+        instance.numero = instance.codigo.split('-')[1]
+        instance.save()
     update_producto(instance.producto.pk)

@@ -11,10 +11,10 @@ class ContratistaAdmin(admin.ModelAdmin):
 
 class IncidenciaAdmin(admin.ModelAdmin):
     list_display = (
-    'codigo', 'tipo', 'descripcion', 'producto', 'estado', 'horas_estimadas', 'horas_trabajadas', 'clasificacion')
+        'codigo', 'tipo', 'descripcion', 'producto', 'estado', 'horas_estimadas', 'horas_trabajadas', 'clasificacion')
     search_fields = ('tipo', 'codigo', 'estado', 'descripcion')
     list_filter = ('estado', 'tipo', 'clasificacion')
-    ordering = ('codigo',)
+    ordering = ('numero',)
 
 
 class SprintAdmin(admin.ModelAdmin):
@@ -26,7 +26,7 @@ class SprintAdmin(admin.ModelAdmin):
 
 class ProductoAdmin(admin.ModelAdmin):
     list_display = (
-    'numero', 'descripcion', 'horas_estimadas', 'horas_utilizadas', 'horas_pagadas', 'modificado', 'pagado')
+        'numero', 'descripcion', 'horas_estimadas', 'horas_utilizadas', 'horas_pagadas', 'modificado', 'pagado')
     search_fields = ('numero', 'descripcion')
     ordering = ("numero",)
     list_filter = ("contratacion__contrato", "contratacion__proyecto__nombre")
@@ -61,7 +61,7 @@ class ObservacionAdmin(admin.ModelAdmin):
 class ContratacionAdmin(admin.ModelAdmin):
     list_display = ('contrato', 'contratista', 'tipo', 'rol', 'proyecto', 'orden_compra',)
     search_fields = ('proyecto__codigo', 'proyecto__nombre', 'contratista__nombre', 'contratista__apellido1')
-    ordering = ("contratista", "proyecto")
+    ordering = ("proyecto", "contratista",)
     list_filter = ("tipo", "proyecto__nombre", "rol")
 
 
