@@ -10,6 +10,7 @@ urlpatterns = [
     path('sprint/<int:pk>/', views.sprint_detail, name='sprint-detail'),
     path('planificacion/proyecto/<int:pk>/', views.planificacion_proyecto, name='planificacion-list'),
     path('planificacion/sprint/<int:pk>/', views.planificacion_sprint, name='planificacion-detail'),
+    path('planificacion/<int:pk>/<int:contratacion>/', views.planificacion_contratacion, name='planificacion-contratacion'),
     path('proyecto/', views.proyecto_list, name='proyecto-list'),
     path('facturacion/<int:pk>/', views.por_facturar, name='facturar-list'),
     path('proyecto/<int:pk>/', views.proyecto_detail, name='proyecto-detail'),

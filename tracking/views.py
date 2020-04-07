@@ -81,6 +81,17 @@ def planificacion_sprint(request, pk):
                       {'sprint': sprint, 'planificaciones': planificaciones})
 
 
+def planificacion_contratacion(request, pk,contratacion):
+    if not request.user.is_authenticated:
+        return redirect('/login')
+    else:
+        sprint = get_object_or_404(Sprint, pk=pk)
+        planificaciones = Planificacion.objects.filter(sprint__pk=sprint.pk, incidencia__producto__contratacion=contratacion)
+        print("llegue")
+        return render(request, 'planificacion_detail.html',
+                      {'sprint': sprint, 'planificaciones': planificaciones})
+
+
 # Proyectos
 
 def proyecto_list(request):
