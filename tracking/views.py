@@ -208,6 +208,7 @@ def por_facturar(request, pk):
         contratacion = get_object_or_404(Contratacion, pk=pk)
         incidencia_list = Incidencia.objects.filter(producto__contratacion__pk=pk, estado=6, clasificacion=2).order_by('producto__numero')
         total_horas = list(incidencia_list.aggregate(Sum('horas_por_pagar')).values())[0]
+        #agregar validación si viene none total_horas
         total_monto = total_horas * float(contratacion.pago_hora)
         page = request.GET.get('page', 1)
         paginator = Paginator(incidencia_list, 10)
